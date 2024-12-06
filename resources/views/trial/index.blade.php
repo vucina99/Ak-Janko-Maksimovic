@@ -5,7 +5,4 @@
 
     <calendar></calendar>
 
-
-
-
 @endsection

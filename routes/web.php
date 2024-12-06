@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -30,9 +31,12 @@ Auth::routes(['register' => false, // Registration Routes...
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/case', [CaseController::class, 'view']);
+    Route::get('/case/vansudski', [CaseController::class, 'viewVansudski']);
     Route::get('/trial', [TrialController::class, 'view']);
     Route::get('/all-trial-from/{date}', [TrialController::class, 'dateResult']);
     Route::post('/logout-form', [HomeController::class, 'logoutForm'])->name('logout-form');
+    Route::get('/import/parnicni', [ImportController::class, 'importParnicni']);
+
 });
 
 

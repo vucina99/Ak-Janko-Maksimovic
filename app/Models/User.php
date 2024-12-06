@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -102,11 +103,11 @@ class User extends Authenticatable
     public function deleteUser($id)
     {
         $users = User::find($id);
-        if (!$users || $id == Auth::user()->id) {
+        if (!$users || $id == Auth::user()->id || $id == 1) {
             return response('{}', 404);
         }
         $users->delete();
-        return response('{}', 204);;
+        return response('{}', 204);
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CaseResource;
+use App\Http\Resources\CaseResourceVanduski;
 use App\Http\Resources\CaseTypeResource;
 use App\Http\Resources\InstitutionResource;
 use App\Models\_Case;
@@ -33,6 +34,12 @@ class CaseController extends Controller
     {
         Session::put('create-case-or-trial', 'case');
         return view('case.index');
+    }
+
+    public function viewVansudski()
+    {
+        Session::put('create-case-or-trial', 'case');
+        return view('case.vansudski');
     }
 
     public function getCaseTypes()
@@ -66,12 +73,50 @@ class CaseController extends Controller
         if ($search->archive !== '' && $search->archive !== null) {
             $cases = $cases->where('archive',  'LIKE', '%' .$search->archive. '%');
         }
-
+        if ($search->mark !== '' && $search->mark !== null) {
+            $cases = $cases->where('mark',  'LIKE', '%' .$search->mark. '%');
+        }
         $count = ceil($cases->count() / $numberData);
         $cases = $cases->orderBy(DB::raw('CAST(number_office AS SIGNED)'), 'ASC')->skip($page * $numberData)->take($numberData)->get();
 
         return response(['data' => CaseResource::collection($cases), 'count' => $count]);
     }
+
+
+
+
+    public function getCasesVansudski(Request $request)
+    {
+        $numberData = 50;
+        $case_type_id = $request->caseType;
+        $search = (object)$request->search;
+        $page = $request->page;
+
+
+        $cases = _Case::where('case_type_id', 5);
+
+        if ($search->institution_number !== '' && $search->institution_number !== null) {
+            $cases = $cases->where('number_institution', 'LIKE', '%' . $search->institution_number. '%');
+        }
+        if ($search->number_office !== '' && $search->number_office !== null) {
+            $cases = $cases->where('number_office',  'LIKE', '%' .$search->number_office. '%');
+        }
+        if ($search->person_1 !== '' && $search->person_1 !== null) {
+            $cases = $cases->where('prosecutor', 'LIKE', '%' . $search->person_1['prosecutor'] . '%');
+        }
+        if ($search->person_2 !== '' && $search->person_2 !== null) {
+            $cases = $cases->where('defendants', 'LIKE', '%' . $search->person_2['defendants'] . '%');
+        }
+
+        if ($search->mark !== '' && $search->mark !== null) {
+            $cases = $cases->where('mark',  'LIKE', '%' .$search->mark. '%');
+        }
+        $count = ceil($cases->count() / $numberData);
+        $cases = $cases->orderBy(DB::raw('CAST(id AS SIGNED)'), 'DESC')->skip($page * $numberData)->take($numberData)->get();
+
+        return response(['data' => CaseResourceVanduski::collection($cases), 'count' => $count]);
+    }
+
 
     public function getInstitutions(Request $request)
     {
@@ -296,6 +341,28 @@ class CaseController extends Controller
     }
 
 
+
+
+    public function updateCaseVansudski($id, Request $request)
+    {
+
+        if (is_numeric($id)) {
+            $case = _Case::find($id);
+
+            if (!$case) {
+
+                return response('{}', 404);
+            }
+
+
+            $case = _Case::where("id", $id)->update([$request->field => $request->value]);
+            $case = _Case::find($id);
+            return response(["data" => $case] , 200);
+        }
+
+        return response('Došlo je do greške', 500);
+    }
+
     public function deleteCase($id)
     {
         if (is_numeric($id)) {
@@ -328,4 +395,13 @@ class CaseController extends Controller
 
         return response()->json(["allNames" => $name]);
     }
+
+ public function createCaseVansudski()
+ {
+     $case = _Case::create([
+         "case_type_id" => 5,
+     ]);
+
+     return response(["data" => new CaseResourceVanduski($case)] , 200);
+ }
 }

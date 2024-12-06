@@ -9,6 +9,7 @@ use App\Models\Institution;
 use App\Models\InstitutionType;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
@@ -89,5 +90,19 @@ class AdminController extends Controller
             return response()->json('', 404);
         }
         return response(new InstitutionResource($institution->original));
+    }
+
+    public function changeRole($id)
+    {
+        if($id == 1 || Auth::user()->id == $id){
+            abort(404);
+        }
+        $user = User::findOrFail($id);
+
+        $user->update([
+            'role_id' => $user->role_id == 2 ? 1 : 2,
+        ]);
+
+        return response("uspesno izmenjeno" , 200);
     }
 }

@@ -9,7 +9,7 @@
                     <div class="choose-type">
                         <div class="container">
                             <div class="row">
-                                <div v-for="(caseType, index) in caseTypes" @click.prevent="type = caseType.id"
+                                <div v-if="caseType.name !== 'VANSUDSKI'" v-for="(caseType, index) in caseTypes" @click.prevent="type = caseType.id"
                                      :class="[ 'type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full' , caseType.id == type ? 'bg-blue text-light' : '',]">
                                     <span>{{ caseType.name }}</span>
                                 </div>
@@ -119,6 +119,14 @@
                                                    class="form-control" placeholder="ARHIVSKI BROJ">
                                         </div>
 
+                                        <div class="form-group search-font-size" v-if="type == 1">
+
+                                            <label  for="archive_number">REGISTASKE OZNAKE</label>
+                                            <input type="text" name="mark" id="archive_number"
+                                                   v-model="search.mark"
+                                                   class="form-control" placeholder="REGISTASKE OZNAKE">
+                                        </div>
+
                                         <div class="pt-3">
                                             <div class="w-100 d-flex justify-content-between">
                                                 <button class="btn btn-primary w-50 mr-1" @click.prevent="getCase()">
@@ -130,6 +138,7 @@
 
                                                 </button>
                                             </div>
+
                                             <div class="w-100 mt-3  " v-if="is_admin == 2">
                                                 <add-cases :type="type" :institutionsSerchData="institutionsSerchData"
                                                            :case_types="caseTypes"></add-cases>
@@ -151,7 +160,6 @@
                         <table class="table  table-hover table-text-size table-cursor">
                             <thead class="bg-blue text-personal-light">
                             <tr>
-                                <th></th>
                                 <th scope="col">BROJ U KANCELARIJI</th>
                                 <th scope="col">
                                     <span v-if="type == 1">BROJ U SUDU</span>
@@ -178,6 +186,11 @@
                                     <span v-if="type == 4">IZVRŠNI DUŻNIK </span>
                                     <span v-if="type == 5">ŠTETNIK</span>
                                 </th>
+
+                                <th scope="col" v-if="type == 1 ">
+                                    <span>REG OZNAKE</span>
+                                </th>
+
                                 <th scope="col" v-if="type !== 6">
                                     <span v-if="type == 1">SUD</span>
                                     <span v-if="type == 2">SUD / TUŽILAŠTVO</span>
@@ -190,15 +203,16 @@
                             </thead>
                             <tbody>
                             <tr v-for="(data, index) in allCases" :key="index">
-                                <td @click.prevent="modalShowCase(data.id)"><i
-                                    class="fa color-blue fa-arrow-circle-o-right"
-                                    aria-hidden="true"></i></td>
+
                                 <td @click.prevent="modalShowCase(data.id)">{{ data.numberOffice }}</td>
                                 <td @click.prevent="modalShowCase(data.id)">{{ data.numberInstitution }}</td>
                                 <td @click.prevent="modalShowCase(data.id)" v-if="type == 6">{{ data.archive }}</td>
                                 <td @click.prevent="modalShowCase(data.id)">{{ data.prosecutor }}</td>
                                 <td v-if="type == 1 || type == 2 || type == 4 || type == 5  "
                                     @click.prevent="modalShowCase(data.id)">{{ data.defendants }}
+                                </td>
+                                <td v-if="type == 1 "
+                                    @click.prevent="modalShowCase(data.id)">{{ data.mark }}
                                 </td>
                                 <td v-if="type !== 6" @click.prevent="modalShowCase(data.id)">{{
                                         data.institution?.name
@@ -217,21 +231,23 @@
                                     class="text-center">
                                     <vue-simple-spinner></vue-simple-spinner>
                                 </td>
-                                <td v-if="type == 3  " colspan="6" class="text-center">
+                                <td v-if="type == 3  " colspan="5" class="text-center">
                                     <vue-simple-spinner></vue-simple-spinner>
                                 </td>
-                                <td v-if="type == 6  " colspan="6" class="text-center">
+                                <td v-if="type == 6  " colspan="5" class="text-center">
                                     <vue-simple-spinner></vue-simple-spinner>
                                 </td>
                             </tr>
                             <tr v-if="!allCases  " class="bg-light">
-
-                                <td v-if="type == 1 || type == 2 || type == 4 || type == 5 " colspan="7"
+                                <td v-if="type == 1  " colspan="7"
                                     class="text-center">
                                     <span>NEMA PODATAKA ZA PRIKAZ</span></td>
-                                <td v-if="type == 3  " colspan="6" class="text-center">
+                                <td  v-if=" type == 2 || type == 4 || type == 5 " colspan="6"
+                                    class="text-center">
                                     <span>NEMA PODATAKA ZA PRIKAZ</span></td>
-                                <td v-if="type == 6  " colspan="6" class="text-center">
+                                <td v-if="type == 3  " colspan="5" class="text-center">
+                                    <span>NEMA PODATAKA ZA PRIKAZ</span></td>
+                                <td v-if="type == 6  " colspan="5" class="text-center">
                                     <span>NEMA PODATAKA ZA PRIKAZ</span></td>
                             </tr>
 
@@ -305,7 +321,8 @@ export default {
                 number_office: '',
                 person_1: '',
                 person_2: '',
-                archive: ''
+                archive: '',
+                mark: ''
             }
         }
     },
@@ -327,7 +344,8 @@ export default {
                 number_office: '',
                 person_1: '',
                 person_2: '',
-                archive: ''
+                archive: '',
+                mark: ''
             }
         },
         getPersons() {
@@ -392,7 +410,8 @@ export default {
                 number_office: '',
                 person_1: '',
                 person_2: '',
-                archive: ''
+                archive: '',
+                mark: ''
             }
             this.page = 0;
             this.getCase();

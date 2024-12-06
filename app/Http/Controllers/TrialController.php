@@ -7,6 +7,7 @@ use App\Models\_Case;
 use App\Models\_Trial;
 use App\Models\Institution;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,8 @@ class TrialController extends Controller
     }
 
     public function dateResult($date)
-    {   $date = Carbon::parse($date)->format("d-m-Y");
+    {
+        $date = Carbon::parse($date)->format("d-m-Y");
         return view('trial.date_results', compact('date'));
     }
 
@@ -99,28 +101,81 @@ class TrialController extends Controller
         return response(['person_1_list' => $person_1_list, 'person_2_list' => $person_2_list]);
     }
 
-    public function updateTrial(Request $request, $id){
+    public function updateTrial(Request $request, $id)
+    {
         $trial = _Trial::find($id);
 
-        if(!$trial){
-            return response('slucaj ne postoji' , 404);
+        if (!$trial) {
+            return response('slucaj ne postoji', 404);
         }
 
-        $editedTrial =  $this->trial->edit($trial, $request);
+        $editedTrial = $this->trial->edit($trial, $request);
 
         return response(new TrialResource($editedTrial), 200);
     }
 
 
-    public function deleteTrial($id){
+    public function deleteTrial($id)
+    {
         $trial = _Trial::find($id);
 
-        if(!$trial){
-            return response('slucaj ne postoji' , 404);
+        if (!$trial) {
+            return response('slucaj ne postoji', 404);
         }
 
         $trial->delete();
 
-        return response('{}' , 204);
+        return response('{}', 204);
+    }
+
+    public function changeVisit(Request $request)
+    {
+        $trial = _Trial::findOrFail($request->id);
+
+        $trial->update([
+            'is_finished' => !$trial->is_finished,
+        ]);
+
+        return response("uspesno izmenjeno", 200);
+    }
+
+    public function exportPdf($date)
+    {
+        $selected_date = Carbon::parse($date)->format("Y-m-d");
+        $trial = _Trial::where('date', $selected_date)->orderBy(DB::raw('CAST(TIME(time) AS UNSIGNED)'), 'ASC')->get();
+        // Podaci koje želiš da prikažeš u PDF-u
+        $data = [
+            'title' => 'Prikaz svih ročišta za datum ' . $date,
+            'content' => $trial,
+        ];
+
+        // Prikaz PDF-a koristeći Blade šablon
+        $pdf = Pdf::loadView('pdf.export', $data);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        // Preuzimanje PDF-a
+        return $pdf->download('example.pdf');
+    }
+
+    public function getSearchTrial(Request $request)
+    {
+        $selected_date = Carbon::now()->format("Y-m-d");
+        $trial = _Trial::where('date', ">=" , $selected_date);
+
+        if(empty($request->number_office) && empty($request->person_1 )){
+            abort(404);
+        }
+
+        if (!empty($request->number_office)) {
+            $trial = $trial->where('number_office', $request->number_office);
+        }
+
+        if (!empty($request->person_1 )) {
+            $trial = $trial->where('prosecutor', 'LIKE', '%' . $request->person_1. '%');
+        }
+
+        $trial = $trial->get();
+        return response(['data' => TrialResource::collection($trial)]);
+
     }
 }

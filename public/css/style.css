@@ -32,7 +32,7 @@ body{
     font-size: 13px;
 }
 #gotovac-logo{
-    width: 250px;
+    width: 160px;
 }
 .navbar-toggler-icon i {
     font-size: 31px;
@@ -166,11 +166,15 @@ footer p{
     font-size: 15px;
 }
 .type-div-size{
-    width: 33.33%;
+    width: 50%;
+    cursor: pointer;
+}
+.type-div-size:first-child{
+    width: 100%;
     cursor: pointer;
 }
 .type-div-size:hover{
-    width: 33.33%;
+    /*width: 100%;*/
     /*background-color: rgba(0,51,102,255);*/
     /*color: #ffffff;*/
 }
@@ -248,9 +252,17 @@ footer p{
     cursor: pointer;
 }
 .type-div-size-back{
-    width: 100% !important;
+    width: 100%;
     cursor: pointer;
 }
+
+.type-div-size-back:first-child{
+    width: 100%;
+    cursor: pointer;
+}
+
+
+
 .type-div-size-back span{
     font-size: 14px !important;
 }

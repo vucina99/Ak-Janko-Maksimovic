@@ -21,6 +21,7 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('search-result', require('./components/case/SearchResult.vue').default);
+Vue.component('search-result-vansudski', require('./components/case/SearchResultVansudski.vue').default);
 Vue.component('calendar', require('./components/trial/Calendar.vue').default);
 Vue.component('date-results', require('./components/trial/DateResults.vue').default);
 Vue.component('staff', require('./components/admin/Staff.vue').default);

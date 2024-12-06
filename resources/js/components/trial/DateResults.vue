@@ -83,7 +83,12 @@
                                                         PRETRAGA <i class="fa fa-search" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
-                                                <div class="w-100 mt-3  " v-if="is_admin == 2" >
+
+                                                <div class="w-100 mt-3  " @click.prevent="exportPdf()">
+                                                    <button class="btn btn-warning w-100">EXPORT PDF <i class="fa-solid fa-file-pdf"></i></button>
+                                                </div>
+
+                                                <div class="w-100 mt-3  "  >
                                                     <add-trial :date_selected="date_selected"
                                                                :institutions_serchData="institutionsSerchData"></add-trial>
                                                 </div>
@@ -104,7 +109,7 @@
                             <table class="table  table-hover table-text-size table-cursor">
                                 <thead class="bg-blue text-personal-light">
                                 <tr>
-                                    <th></th>
+                                    <th>PRISUSTVO</th>
                                     <th>VREME</th>
                                     <th>INSTITUCIJA</th>
                                     <th>BROJ SUDNICE</th>
@@ -119,8 +124,13 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(trial, index) in allTrial">
-                                    <td @click.prevent="modalShowTrial(trial)"><i
-                                        class="fa color-blue fa-arrow-circle-o-right" aria-hidden="true"></i></td>
+                                    <td @click.prevent="changeVisit(trial.id)">
+
+                                        <i class="fa fa-circle text-success" v-if="trial.isFinished "
+                                           aria-hidden="true"></i>
+                                        <i class="fa fa-circle text-danger" v-if="!trial.isFinished"
+                                           aria-hidden="true"></i>
+                                    </td>
                                     <td @click.prevent="modalShowTrial(trial)">
                                         {{ trial.time ? trial.time.slice(0, 5) : '' }}
                                     </td>
@@ -140,13 +150,13 @@
                                 </tr>
                                 <tr v-if="allTrial.length < 1" class="bg-light">
 
-                                    <td colspan="9" class="text-center">
+                                    <td colspan="10" class="text-center">
                                         <vue-simple-spinner></vue-simple-spinner>
                                     </td>
                                 </tr>
                                 <tr v-if="!allTrial  " class="bg-light">
 
-                                    <td colspan="10"
+                                    <td colspan="11"
                                         class="text-center">
                                         <span>NEMA PODATAKA ZA PRIKAZ</span></td>
 
@@ -226,6 +236,9 @@ export default {
         }
     },
     methods: {
+        exportPdf(){
+            window.location.href = "/trial/export-pdf/"+this.date_selected;
+        },
         getTrials(page = 0) {
             this.allCases = []
 
@@ -277,6 +290,14 @@ export default {
                 alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
             })
         },
+
+        changeVisit(id){
+            axios.post('/trial/change-visit' , {id}).then(({data}) => {
+                this.getTrials();
+            }).catch((error) => {
+                alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
+            })
+        }
     },
     created() {
         this.getTrials();

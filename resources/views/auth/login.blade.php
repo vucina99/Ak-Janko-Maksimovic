@@ -7,8 +7,8 @@
                 <div class="col-lg-8 col-md-12 ">
                     <div class="card border-blue">
                         <div class="card-header  pt-0 pb-0 bg-personal-light w-100 d-flex justify-content-center">
-                            <div class="w-25 text-center">
-                                <img src="{{asset('img/logo-images/empty-logo.png')}}" class="w-50" alt="small-logo">
+                            <div class="w-25 text-center pb-2 pt-2">
+                                <img src="{{asset('img/logo-images/empty-logo.png')}}" class="w-25" alt="small-logo">
                             </div>
                         </div>
 

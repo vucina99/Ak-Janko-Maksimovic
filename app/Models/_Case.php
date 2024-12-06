@@ -19,11 +19,27 @@ class _Case extends Model
         'prosecutor',
         'defendants',
         'institution_id',
-        'note',
         'mark',
         'fail_day',
         'case_type_id',
-        'archive'
+        'archive',
+        'brand',
+        'date_send_to_expert',
+        'date_send_to_mail',
+        'date_of_findings',
+        'date_of_reporting_to_insurance',
+        'deadline',
+        'requested_amount',
+        'paid_amount',
+        'expert_costs',
+        'status',
+        'mup_note',
+        'damage_number',
+        'commission',
+        'at',
+        'lawsuit',
+        'note',
+        'vansudski_number'
     ];
 
     public function institution()
@@ -47,9 +63,9 @@ class _Case extends Model
         if ($request->institutions && $request->institutions !== null && $request->institutions !== '') {
             $institutionID = $request->institutions['id'];
         }
-
+        $lastNumberOffice = _Case::max("number_office");
         $case = _Case::create([
-            'number_office' => $request->number_office,
+            'number_office' =>  $lastNumberOffice ? $lastNumberOffice + 1 : 1,
             'number_institution' => $request->number_court,
             'prosecutor' => $request->prosecutor,
             'defendants' => $request->defendants,

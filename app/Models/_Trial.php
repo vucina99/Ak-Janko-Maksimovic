@@ -21,7 +21,8 @@ class _Trial extends Model
         'date',
         'time',
         'courtroom_number',
-        'archive'
+        'archive',
+        'is_finished'
     ];
 
     public function user()
@@ -45,6 +46,7 @@ class _Trial extends Model
             $userID = $request->user['id'];
         }
         $date =  Carbon::parse($request->date)->format("Y-m-d");
+
         $trial = _Trial::create([
             'number_office' => $request->number_office,
             'number_institution' => $request->number_institution,

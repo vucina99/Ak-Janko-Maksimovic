@@ -19,7 +19,7 @@
                             <div class="choose-type w-100">
                                 <div class="container"><br>
                                     <div class="row">
-                                        <div v-for="(caseType, index) in case_types"
+                                        <div v-if="caseType.name !== 'VANSUDSKI'" v-for="(caseType, index) in case_types"
                                              :class="[ 'type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full' , caseType.id == type ? 'bg-blue text-light' : '',]">
                                             <span>{{ caseType.name }}</span>
                                         </div>
@@ -69,7 +69,7 @@
 
                                                 <div class="form-group">
                                                     <label for="number_court">BROJ U KANCELARIJI</label>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" disabled
                                                            id="number_court"
                                                            v-model="caseData.numberOffice"
                                                            placeholder="BROJ U KANCELARIJI">
@@ -152,7 +152,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group " v-if="type == 5">
+                                                <div class="form-group " v-if="type == 5 || type == 1">
 
                                                     <label for="marks">REGISTASKE OZNAKE</label>
 

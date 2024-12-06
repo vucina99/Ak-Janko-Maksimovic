@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <staff></staff>
+    <staff :is_admin="{{Auth::user()->id}}"></staff>
 
 
 @endsection

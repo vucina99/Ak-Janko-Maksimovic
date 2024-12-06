@@ -104,9 +104,9 @@
                                 <tbody>
 
                                 <tr v-for="(user , index) in users" :key="index">
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.role.name }}</td>
+                                    <td @click="changeRole(user.id , user.name)">{{ user.name }}</td>
+                                    <td @click="changeRole(user.id , user.name)">{{ user.email }}</td>
+                                    <td @click="changeRole(user.id , user.name)">{{ user.role.name }}</td>
                                     <td @click="deleteUser(user.id , index);"><i class="fa fa-trash text-danger"
                                                                                  aria-hidden="true"></i></td>
                                 </tr>
@@ -133,7 +133,7 @@ import Spinner from 'vue-simple-spinner'
 
 export default {
     name: "Staff",
-    props: [],
+    props: ['is_admin'],
     components: {Spinner},
     data() {
         return {
@@ -150,6 +150,33 @@ export default {
         }
     },
     methods: {
+        changeRole(id, name){
+            if(id == 1 || this.is_admin == id){
+                return;
+            }
+            this.$confirm(
+                {
+                    message: `DA LI STE SIGURNI DA ŽELITE DA PROMENITE ULOGU KORISNIKU ${name}?`,
+                    button: {
+                        no: 'NE',
+                        yes: 'DA'
+                    },
+                    /**
+                     * Callback Function
+                     * @param {Boolean} confirm
+                     */
+                    callback: confirm => {
+                        if (confirm ) {
+                            axios.get('/admin/change-role/' + id).then(({data}) => {
+                                this.getUsers();
+                            }).catch((error) => {
+                                alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE')
+                            });
+                        }
+                    }
+                }
+            )
+        },
         createUser() {
             axios.post('/admin/create/staff', this.user).then(({data}) => {
                 this.success = true
@@ -181,7 +208,9 @@ export default {
             })
         },
         deleteUser(id, index) {
-
+            if(id == 1 || this.is_admin == id){
+                return;
+            }
             this.$confirm(
                 {
                     message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE KORISNIKA?',

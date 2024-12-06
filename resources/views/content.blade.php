@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Gotovac i Saradnici</title>
-    <link rel="shortcut icon" href="{{asset("/img/logo-images/logo.ico")}}">
+    <title>AK Janko Maksimovic</title>
+    <link rel="shortcut icon" href="{{asset("/img/logo-images/logo.png")}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,11 +19,11 @@
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-expand-lg  bg-personal-light color-blue border-blue">
+    <nav class="navbar navbar-expand-lg pt-0 pb-0  bg-personal-light color-blue border-blue">
         <div class="container">
 
             <a class="navbar-brand" href="/">
-                <img src="{{asset('img/logo-images/full-logo.png')}}" alt="gotovac-logo" id="gotovac-logo">
+                <img src="{{asset('img/logo-images/full-logo.png')}}" alt="janko-maksimovic-logo" id="gotovac-logo">
             </a>
             <button class="navbar-toggler  " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,11 @@
                         <li class="nav-item color-blue ml-1 ">
                             <a class="nav-link  active color-blue " href="/case">
                                 PREDMETI
+                            </a>
+                        </li>
+                        <li class="nav-item color-blue ml-1 ">
+                            <a class="nav-link  active color-blue " href="/case/vansudski">
+                                VANSUDSKI-PREDMETI
                             </a>
                         </li>
                         <li class="nav-item color-blue ml-1 ">
@@ -99,8 +104,8 @@
     <footer><br>
         <div class="container">
             <div class="row">
-                <div class="col-6 d-flex align-items-center"><p class="text-light">GOTOVAC & SARADNICI </p></div>
-                <div class="col-6 text-right d-flex align-items-center justify-content-end"><p class="text-light">© 2022
+                <div class="col-6 d-flex align-items-center"><p class="text-light">AK - JANKO MAKSIMOVIC </p></div>
+                <div class="col-6 text-right d-flex align-items-center justify-content-end"><p class="text-light">© 2024
                         COPYRIGHT : VUK ZDRAVKOVIĆ</p></div>
             </div>
         </div>

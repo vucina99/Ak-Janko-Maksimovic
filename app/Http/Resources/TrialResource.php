@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TrialResource extends JsonResource
@@ -24,9 +25,12 @@ class TrialResource extends JsonResource
             'institution' => new InstitutionResource($this->institution),
             'note' => $this->note,
             'date' => $this->date,
+            'dateParse' => $this->date ? Carbon::parse($this->date)->format("d-m-Y") : $this->date,
             'time' => $this->time,
             'archive' => $this->archive,
-            'courtroom_number' => $this->courtroom_number
+            'courtroom_number' => $this->courtroom_number,
+            'isFinished' => $this->is_finished,
+
 
         ];
     }

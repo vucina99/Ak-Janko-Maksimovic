@@ -17,4 +17,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/create/staff', [AdminController::class, 'createUser']);
     Route::get('/get/users', [AdminController::class, 'getUsers']);
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser']);
+    Route::get('/change-role/{id}', [AdminController::class, 'changeRole']);
+
 });

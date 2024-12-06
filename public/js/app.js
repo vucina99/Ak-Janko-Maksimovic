@@ -5450,7 +5450,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Staff",
-  props: [],
+  props: ['is_admin'],
   components: {
     Spinner: (vue_simple_spinner__WEBPACK_IMPORTED_MODULE_0___default())
   },
@@ -5469,15 +5469,42 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    createUser: function createUser() {
+    changeRole: function changeRole(id, name) {
       var _this = this;
-      axios.post('/admin/create/staff', this.user).then(function (_ref) {
-        var data = _ref.data;
-        _this.success = true;
-        _this.errorData = {};
-        _this.error = false;
-        _this.users.push(data);
-        _this.user = {
+      if (id == 1 || this.is_admin == id) {
+        return;
+      }
+      this.$confirm({
+        message: "DA LI STE SIGURNI DA \u017DELITE DA PROMENITE ULOGU KORISNIKU ".concat(name, "?"),
+        button: {
+          no: 'NE',
+          yes: 'DA'
+        },
+        /**
+         * Callback Function
+         * @param {Boolean} confirm
+         */
+        callback: function callback(confirm) {
+          if (confirm) {
+            axios.get('/admin/change-role/' + id).then(function (_ref) {
+              var data = _ref.data;
+              _this.getUsers();
+            })["catch"](function (error) {
+              alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE');
+            });
+          }
+        }
+      });
+    },
+    createUser: function createUser() {
+      var _this2 = this;
+      axios.post('/admin/create/staff', this.user).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.success = true;
+        _this2.errorData = {};
+        _this2.error = false;
+        _this2.users.push(data);
+        _this2.user = {
           ime: '',
           email: '',
           lozinka: '',
@@ -5485,25 +5512,28 @@ __webpack_require__.r(__webpack_exports__);
         };
       })["catch"](function (error) {
         if (error.response.status == 400) {
-          _this.errorData = error.response.data.original;
-          _this.success = false;
-          _this.error = false;
+          _this2.errorData = error.response.data.original;
+          _this2.success = false;
+          _this2.error = false;
         } else {
-          _this.error = true;
-          _this.success = false;
+          _this2.error = true;
+          _this2.success = false;
         }
       });
     },
     getUsers: function getUsers() {
-      var _this2 = this;
-      axios.get('/admin/get/users').then(function (_ref2) {
-        var data = _ref2.data;
-        _this2.users = data;
+      var _this3 = this;
+      axios.get('/admin/get/users').then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.users = data;
         console.log(data);
       });
     },
     deleteUser: function deleteUser(id, index) {
-      var _this3 = this;
+      var _this4 = this;
+      if (id == 1 || this.is_admin == id) {
+        return;
+      }
       this.$confirm({
         message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE KORISNIKA?',
         button: {
@@ -5516,12 +5546,12 @@ __webpack_require__.r(__webpack_exports__);
          */
         callback: function callback(confirm) {
           if (confirm) {
-            axios["delete"]('/admin/delete/user/' + id).then(function (_ref3) {
-              var data = _ref3.data;
-              var filter = _this3.users.filter(function (value, key) {
+            axios["delete"]('/admin/delete/user/' + id).then(function (_ref4) {
+              var data = _ref4.data;
+              var filter = _this4.users.filter(function (value, key) {
                 return key !== index;
               });
-              _this3.users = filter;
+              _this4.users = filter;
             })["catch"](function (error) {
               alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE');
             });
@@ -5970,7 +6000,8 @@ __webpack_require__.r(__webpack_exports__);
         number_office: '',
         person_1: '',
         person_2: '',
-        archive: ''
+        archive: '',
+        mark: ''
       }
     };
   },
@@ -5991,7 +6022,8 @@ __webpack_require__.r(__webpack_exports__);
         number_office: '',
         person_1: '',
         person_2: '',
-        archive: ''
+        archive: '',
+        mark: ''
       };
     },
     getPersons: function getPersons() {
@@ -6066,7 +6098,8 @@ __webpack_require__.r(__webpack_exports__);
         number_office: '',
         person_1: '',
         person_2: '',
-        archive: ''
+        archive: '',
+        mark: ''
       };
       this.page = 0;
       this.getCase();
@@ -6124,6 +6157,168 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "SearchResultVansudski",
+  components: {
+    'v-select': (vue_select__WEBPACK_IMPORTED_MODULE_0___default())
+  },
+  data: function data() {
+    return {
+      allCases: [],
+      // Svi slučajevi
+      editableField: {
+        index: null,
+        field: null,
+        value: '',
+        originalValue: ''
+      },
+      // Držimo trenutno uređeno polje
+      search: {
+        institution_number: '',
+        number_office: '',
+        person_1: '',
+        person_2: '',
+        mark: ''
+      },
+      page: 0,
+      paginateCount: 0,
+      person_1_list: [],
+      person_2_list: []
+    };
+  },
+  methods: {
+    /**
+     * Pokreće uređivanje polja.
+     * @param {Number} index - Indeks reda u tabeli.
+     * @param {String} field - Naziv kolone.
+     */
+    editField: function editField(index, field) {
+      this.editableField = {
+        index: index,
+        field: field,
+        value: this.allCases[index][field],
+        originalValue: this.allCases[index][field] // Čuvamo originalnu vrednost
+      };
+    },
+    /**
+     * Čuva promene u polju i ažurira na serveru.
+     * @param {Number} index - Indeks reda u tabeli.
+     * @param {String} field - Naziv kolone.
+     */
+    saveField: function saveField(index, field) {
+      var _this = this;
+      if (this.editableField.value !== this.allCases[index][field]) {
+        this.allCases[index][field] = this.editableField.value;
+
+        // Ažuriraj na serveru
+        axios.patch("/case/edit/vansudski/".concat(this.allCases[index].id), {
+          field: field,
+          // Naziv kolone
+          value: this.editableField.value // Nova vrednost
+        }).then(function (data) {
+          console.log(_this.page);
+          _this.getCase(_this.page); // Osveži listu nakon dodavanja
+        })["catch"](function () {
+          alert('Došlo je do greške, probajte ponovo.');
+          // Ako ažuriranje ne uspe, vraćamo staru vrednost
+          _this.allCases[index][field] = _this.editableField.originalValue;
+        });
+      }
+
+      // Resetujemo uređivanje
+      this.editableField = {
+        index: null,
+        field: null,
+        value: '',
+        originalValue: ''
+      };
+    },
+    /**
+     * Poništava uređivanje i vraća originalnu vrednost.
+     */
+    cancelEdit: function cancelEdit() {
+      if (this.editableField.index !== null && this.editableField.field !== null) {
+        // Vraćamo originalnu vrednost
+        this.allCases[this.editableField.index][this.editableField.field] = this.editableField.originalValue;
+      }
+
+      // Resetujemo uređivanje
+      this.editableField = {
+        index: null,
+        field: null,
+        value: '',
+        originalValue: ''
+      };
+    },
+    /**
+     * Dohvata slučajeve sa servera.
+     * @param {Number} page - Trenutna stranica.
+     */
+    getCase: function getCase() {
+      var _this2 = this;
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      this.allCases = [];
+      axios.post('/case/get/cases/vansudski', {
+        search: this.search,
+        page: page
+      }).then(function (_ref) {
+        var data = _ref.data;
+        _this2.allCases = data.data;
+        _this2.paginateCount = data.count;
+        if (_this2.allCases.length < 1) _this2.allCases = false;
+      })["catch"](function () {
+        alert('Došlo je do greške, probajte ponovo.');
+      });
+    },
+    /**
+     * Resetuje filter za pretragu.
+     */
+    resetFilter: function resetFilter() {
+      this.search = {
+        institution_number: '',
+        number_office: '',
+        person_1: '',
+        person_2: '',
+        mark: ''
+      };
+    },
+    /**
+     * Dodaje novi slučaj.
+     */
+    addNewCase: function addNewCase() {
+      var _this3 = this;
+      axios.post('/case/create/case/vansudski', {}).then(function (_ref2) {
+        var data = _ref2.data;
+        _this3.getCase(); // Osveži listu nakon dodavanja
+      })["catch"](function () {
+        alert('Pokušajte ponovo kasnije. Došlo je do greške.');
+      });
+    }
+  },
+  /**
+   * Automatski se pokreće prilikom kreiranja komponente.
+   */
+  created: function created() {
+    this.getCase();
   }
 });
 
@@ -6366,6 +6561,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      searchData: {
+        'number_office': '',
+        'person_1': ''
+      },
+      showSearchedData: [],
       calendarOptions: {
         plugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__["default"], _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__["default"]],
         initialView: 'dayGridMonth',
@@ -6383,6 +6583,21 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     handleDateClick: function handleDateClick(arg) {
       window.location.href = "/all-trial-from/" + arg.dateStr;
+    },
+    getTrialDates: function getTrialDates() {
+      var _this = this;
+      this.showSearchedData = [];
+      if (this.searchData.number_office == "" && this.searchData.person_1 == "") {
+        return;
+      }
+      axios.post("/trial/get-trial-search", this.searchData).then(function (_ref) {
+        var data = _ref.data;
+        _this.showSearchedData = data.data;
+        _this.$modal.show('show-cases-search');
+      });
+    },
+    closeModal: function closeModal() {
+      this.$modal.hide('show-cases-search');
     }
   }
 });
@@ -6443,6 +6658,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    exportPdf: function exportPdf() {
+      window.location.href = "/trial/export-pdf/" + this.date_selected;
+    },
     getTrials: function getTrials() {
       var _this = this;
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -6504,35 +6722,46 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora');
       });
+    },
+    changeVisit: function changeVisit(id) {
+      var _this4 = this;
+      axios.post('/trial/change-visit', {
+        id: id
+      }).then(function (_ref4) {
+        var data = _ref4.data;
+        _this4.getTrials();
+      })["catch"](function (error) {
+        alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora');
+      });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
     this.getTrials();
     this.getInstitutionsForSearch();
     this.getPersons();
     this.$root.$on("addEditedTrialInArray", function (data) {
-      if (typeof _this4.allTrial[data.trialIndex] !== "undefined") {
-        _this4.allTrial = _this4.allTrial.map(function (x, indexMap) {
+      if (typeof _this5.allTrial[data.trialIndex] !== "undefined") {
+        _this5.allTrial = _this5.allTrial.map(function (x, indexMap) {
           return data.trialIndex === indexMap ? data.trialData : x;
         });
-        _this4.getInstitutionsForSearch();
-        _this4.getPersons();
+        _this5.getInstitutionsForSearch();
+        _this5.getPersons();
       }
     });
     this.$root.$on("removeTrialFromArray", function (trialIndex) {
-      if (typeof _this4.allTrial[trialIndex] !== "undefined") {
-        _this4.allTrial.splice(trialIndex, 1);
-        if (_this4.allTrial.length < 1) {
-          _this4.allTrial = false;
+      if (typeof _this5.allTrial[trialIndex] !== "undefined") {
+        _this5.allTrial.splice(trialIndex, 1);
+        if (_this5.allTrial.length < 1) {
+          _this5.allTrial = false;
         }
       }
     });
     this.$root.$on("addNewTrialInArray", function (data) {
-      if (_this4.allTrial == false) {
-        _this4.allTrial = [];
+      if (_this5.allTrial == false) {
+        _this5.allTrial = [];
       }
-      _this4.allTrial.push(data);
+      _this5.allTrial.push(data);
     });
   }
 });
@@ -7295,7 +7524,25 @@ var render = function render() {
   }, [_vm._m(3), _vm._v(" "), _c("tbody", [_vm._l(_vm.users, function (user, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(user.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(user.role.name))]), _vm._v(" "), _c("td", {
+    }, [_c("td", {
+      on: {
+        click: function click($event) {
+          return _vm.changeRole(user.id, user.name);
+        }
+      }
+    }, [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c("td", {
+      on: {
+        click: function click($event) {
+          return _vm.changeRole(user.id, user.name);
+        }
+      }
+    }, [_vm._v(_vm._s(user.email))]), _vm._v(" "), _c("td", {
+      on: {
+        click: function click($event) {
+          return _vm.changeRole(user.id, user.name);
+        }
+      }
+    }, [_vm._v(_vm._s(user.role.name))]), _vm._v(" "), _c("td", {
       on: {
         click: function click($event) {
           return _vm.deleteUser(user.id, index);
@@ -7428,9 +7675,9 @@ var render = function render() {
   }, [_c("br"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, _vm._l(_vm.case_types, function (caseType, index) {
-    return _c("div", {
+    return caseType.name !== "VANSUDSKI" ? _c("div", {
       "class": ["type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full", caseType.id == _vm.type ? "bg-blue text-light" : ""]
-    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]);
+    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]) : _vm._e();
   }), 0)]), _vm._v(" "), _c("div", {
     staticClass: "container bg-personal-light"
   }, [_c("div", {
@@ -7485,7 +7732,10 @@ var render = function render() {
       expression: "dataCase.institutions"
     }
   })], 1) : _vm._e(), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
+    staticClass: "form-group",
+    attrs: {
+      hidden: ""
+    }
   }, [_c("label", {
     attrs: {
       "for": "number_court"
@@ -7696,7 +7946,7 @@ var render = function render() {
       },
       expression: "dataCase.fail_day"
     }
-  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 ? _c("div", {
+  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 || _vm.type == 1 ? _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7922,9 +8172,9 @@ var render = function render() {
   }, [_c("br"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, _vm._l(_vm.case_types, function (caseType, index) {
-    return _c("div", {
+    return caseType.name !== "VANSUDSKI" ? _c("div", {
       "class": ["type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full", caseType.id == _vm.type ? "bg-blue text-light" : ""]
-    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]);
+    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]) : _vm._e();
   }), 0)]), _vm._v(" "), _c("div", {
     staticClass: "container bg-personal-light"
   }, [_c("div", {
@@ -7993,6 +8243,7 @@ var render = function render() {
     staticClass: "form-control",
     attrs: {
       type: "text",
+      disabled: "",
       id: "number_court",
       placeholder: "BROJ U KANCELARIJI"
     },
@@ -8189,7 +8440,7 @@ var render = function render() {
       },
       expression: "caseData.failDay"
     }
-  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 ? _c("div", {
+  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 || _vm.type == 1 ? _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -8399,7 +8650,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, _vm._l(_vm.caseTypes, function (caseType, index) {
-    return _c("div", {
+    return caseType.name !== "VANSUDSKI" ? _c("div", {
       "class": ["type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full", caseType.id == _vm.type ? "bg-blue text-light" : ""],
       on: {
         click: function click($event) {
@@ -8407,7 +8658,7 @@ var render = function render() {
           _vm.type = caseType.id;
         }
       }
-    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]);
+    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]) : _vm._e();
   }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "w-100 bg-personal-light"
   }, [_c("div", {
@@ -8615,6 +8866,35 @@ var render = function render() {
         _vm.$set(_vm.search, "archive", $event.target.value);
       }
     }
+  })]) : _vm._e(), _vm._v(" "), _vm.type == 1 ? _c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "archive_number"
+    }
+  }, [_vm._v("REGISTASKE OZNAKE")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.mark,
+      expression: "search.mark"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "mark",
+      id: "archive_number",
+      placeholder: "REGISTASKE OZNAKE"
+    },
+    domProps: {
+      value: _vm.search.mark
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "mark", $event.target.value);
+      }
+    }
   })]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "pt-3"
   }, [_c("div", {
@@ -8661,7 +8941,7 @@ var render = function render() {
     staticClass: "table table-hover table-text-size table-cursor"
   }, [_c("thead", {
     staticClass: "bg-blue text-personal-light"
-  }, [_c("tr", [_c("th"), _vm._v(" "), _c("th", {
+  }, [_c("tr", [_c("th", {
     attrs: {
       scope: "col"
     }
@@ -8677,7 +8957,11 @@ var render = function render() {
     attrs: {
       scope: "col"
     }
-  }, [_vm.type == 1 ? _c("span", [_vm._v("TUŽENI")]) : _vm._e(), _vm._v(" "), _vm.type == 2 ? _c("span", [_vm._v("OKRIVLJENI")]) : _vm._e(), _vm._v(" "), _vm.type == 4 ? _c("span", [_vm._v("IZVRŠNI DUŻNIK ")]) : _vm._e(), _vm._v(" "), _vm.type == 5 ? _c("span", [_vm._v("ŠTETNIK")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.type !== 6 ? _c("th", {
+  }, [_vm.type == 1 ? _c("span", [_vm._v("TUŽENI")]) : _vm._e(), _vm._v(" "), _vm.type == 2 ? _c("span", [_vm._v("OKRIVLJENI")]) : _vm._e(), _vm._v(" "), _vm.type == 4 ? _c("span", [_vm._v("IZVRŠNI DUŻNIK ")]) : _vm._e(), _vm._v(" "), _vm.type == 5 ? _c("span", [_vm._v("ŠTETNIK")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.type == 1 ? _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_c("span", [_vm._v("REG OZNAKE")])]) : _vm._e(), _vm._v(" "), _vm.type !== 6 ? _c("th", {
     attrs: {
       scope: "col"
     }
@@ -8690,18 +8974,6 @@ var render = function render() {
     return _c("tr", {
       key: index
     }, [_c("td", {
-      on: {
-        click: function click($event) {
-          $event.preventDefault();
-          return _vm.modalShowCase(data.id);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "fa color-blue fa-arrow-circle-o-right",
-      attrs: {
-        "aria-hidden": "true"
-      }
-    })]), _vm._v(" "), _c("td", {
       on: {
         click: function click($event) {
           $event.preventDefault();
@@ -8736,7 +9008,14 @@ var render = function render() {
           return _vm.modalShowCase(data.id);
         }
       }
-    }, [_vm._v(_vm._s(data.defendants) + "\n                            ")]) : _vm._e(), _vm._v(" "), _vm.type !== 6 ? _c("td", {
+    }, [_vm._v(_vm._s(data.defendants) + "\n                            ")]) : _vm._e(), _vm._v(" "), _vm.type == 1 ? _c("td", {
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          return _vm.modalShowCase(data.id);
+        }
+      }
+    }, [_vm._v(_vm._s(data.mark) + "\n                            ")]) : _vm._e(), _vm._v(" "), _vm.type !== 6 ? _c("td", {
       on: {
         click: function click($event) {
           $event.preventDefault();
@@ -8775,29 +9054,34 @@ var render = function render() {
   }, [_c("vue-simple-spinner")], 1) : _vm._e(), _vm._v(" "), _vm.type == 3 ? _c("td", {
     staticClass: "text-center",
     attrs: {
-      colspan: "6"
+      colspan: "5"
     }
   }, [_c("vue-simple-spinner")], 1) : _vm._e(), _vm._v(" "), _vm.type == 6 ? _c("td", {
     staticClass: "text-center",
     attrs: {
-      colspan: "6"
+      colspan: "5"
     }
   }, [_c("vue-simple-spinner")], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), !_vm.allCases ? _c("tr", {
     staticClass: "bg-light"
-  }, [_vm.type == 1 || _vm.type == 2 || _vm.type == 4 || _vm.type == 5 ? _c("td", {
+  }, [_vm.type == 1 ? _c("td", {
     staticClass: "text-center",
     attrs: {
       colspan: "7"
     }
-  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e(), _vm._v(" "), _vm.type == 3 ? _c("td", {
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e(), _vm._v(" "), _vm.type == 2 || _vm.type == 4 || _vm.type == 5 ? _c("td", {
     staticClass: "text-center",
     attrs: {
       colspan: "6"
     }
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e(), _vm._v(" "), _vm.type == 3 ? _c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "5"
+    }
   }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e(), _vm._v(" "), _vm.type == 6 ? _c("td", {
     staticClass: "text-center",
     attrs: {
-      colspan: "6"
+      colspan: "5"
     }
   }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e()]) : _vm._e()], 2)])]), _vm._v(" "), _c("br"), _vm._v(" "), _c("div", {
     staticClass: "paginationScroll"
@@ -8843,6 +9127,1094 @@ var render = function render() {
   }, [_vm._m(1)]) : _vm._e()], 2)]) : _vm._e()])])])])]);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("a", {
+    staticClass: "page-link one",
+    attrs: {
+      href: "#",
+      tabindex: "-1"
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-chevron-left",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("a", {
+    staticClass: "page-link one",
+    attrs: {
+      href: "#"
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-chevron-right",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "options-first options-first-lg"
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-12 col-sm-12"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "w-100 bg-personal-light pt-5 pr-3 pl-3"
+  }, [_c("form", {
+    attrs: {
+      action: ""
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("BROJ U OSIGURANJU")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.institution_number,
+      expression: "search.institution_number"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "number_court",
+      id: "number_court",
+      placeholder: "BROJ U OSIGURANJU"
+    },
+    domProps: {
+      value: _vm.search.institution_number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "institution_number", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("BROJ U KANCELARIJI")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.number_office,
+      expression: "search.number_office"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "number_court",
+      id: "number_office",
+      placeholder: "BROJ U KANCELARIJI"
+    },
+    domProps: {
+      value: _vm.search.number_office
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "number_office", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("OŠTEĆENI")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.person_1_list,
+      id: "prosecutor",
+      label: "prosecutor",
+      placeholder: "OŠTEĆENI"
+    },
+    model: {
+      value: _vm.search.person_1,
+      callback: function callback($$v) {
+        _vm.$set(_vm.search, "person_1", $$v);
+      },
+      expression: "search.person_1"
+    }
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("ŠTETNIK")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.person_2_list,
+      id: "defendants",
+      label: "defendants",
+      placeholder: "ŠTETNIK"
+    },
+    model: {
+      value: _vm.search.person_2,
+      callback: function callback($$v) {
+        _vm.$set(_vm.search, "person_2", $$v);
+      },
+      expression: "search.person_2"
+    }
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "archive_number"
+    }
+  }, [_vm._v("REGISTASKE OZNAKE")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.mark,
+      expression: "search.mark"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "mark",
+      id: "archive_number",
+      placeholder: "REGISTASKE OZNAKE"
+    },
+    domProps: {
+      value: _vm.search.mark
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "mark", $event.target.value);
+      }
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "pt-3 pr-1 pl-1 pb-3"
+  }, [_c("div", {
+    staticClass: "w-100 d-flex justify-content-between"
+  }, [_c("button", {
+    staticClass: "btn btn-primary w-50 mr-1",
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getCase();
+      }
+    }
+  }, [_vm._v("PRETRAGA "), _c("i", {
+    staticClass: "fa fa-search",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary ml-1 w-50",
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.resetFilter();
+      }
+    }
+  }, [_vm._v("RESETUJ "), _c("i", {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])])])])]), _vm._v(" "), _c("br"), _c("br"), _vm._v(" "), _c("div", {
+    staticClass: "container-fluid"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-12 col-sm-12 margin-top-table pr-3 pl-3"
+  }, [_c("button", {
+    staticClass: "btn btn-success px-5",
+    on: {
+      click: function click($event) {
+        return _vm.addNewCase();
+      }
+    }
+  }, [_vm._v("DODAJ "), _c("i", {
+    staticClass: "fa fa-plus",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-hover table-text-size table-cursor"
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", [_vm._l(_vm.allCases, function (data, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "vansudski_number");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "vansudski_number" ? _c("span", [_vm._v(_vm._s(data.vansudski_number))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "vansudski_number");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "mark");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "mark" ? _c("span", [_vm._v(_vm._s(data.mark))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "mark");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "brand");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "brand" ? _c("span", [_vm._v(_vm._s(data.brand))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "brand");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "prosecutor");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "prosecutor" ? _c("span", [_vm._v(_vm._s(data.prosecutor))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "prosecutor");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "fail_day");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "fail_day" ? _c("span", [_vm._v(_vm._s(data.fail_day))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date",
+        placeholder: "dd-mm-yyyy"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "fail_day");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "date_send_to_expert");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "date_send_to_expert" ? _c("span", [_vm._v(_vm._s(data.date_send_to_expert))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "date_send_to_expert");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "date_send_to_mail");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "date_send_to_mail" ? _c("span", [_vm._v(_vm._s(data.date_send_to_mail))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "date_send_to_mail");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "date_of_findings");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "date_of_findings" ? _c("span", [_vm._v(_vm._s(data.date_of_findings))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "date_of_findings");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "expert_costs");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "expert_costs" ? _c("span", [_vm._v(_vm._s(data.expert_costs))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "expert_costs");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "date_of_reporting_to_insurance");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "date_of_reporting_to_insurance" ? _c("span", [_vm._v(_vm._s(data.date_of_reporting_to_insurance))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "date_of_reporting_to_insurance");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "deadline");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "deadline" ? _c("span", [_vm._v(_vm._s(data.deadline))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "date"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "deadline");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "requested_amount");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "requested_amount" ? _c("span", [_vm._v(_vm._s(data.requested_amount))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text",
+        step: "0.01"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "requested_amount");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "status");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "status" ? _c("span", [_vm._v(_vm._s(data.status))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "status");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "mup_note");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "mup_note" ? _c("span", [_vm._v(_vm._s(data.mup_note))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "mup_note");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "damage_number");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "damage_number" ? _c("span", [_vm._v(_vm._s(data.damage_number))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "damage_number");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "paid_amount");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "paid_amount" ? _c("span", [_vm._v(_vm._s(data.paid_amount))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text",
+        step: "0.01"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "paid_amount");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "commission");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "commission" ? _c("span", [_vm._v(_vm._s(data.commission))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text",
+        step: "0.01"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "commission");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "at");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "at" ? _c("span", [_vm._v(_vm._s(data.at))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "at");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "lawsuit");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "lawsuit" ? _c("span", [_vm._v(_vm._s(data.lawsuit))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "lawsuit");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", {
+      on: {
+        dblclick: function dblclick($event) {
+          return _vm.editField(index, "note");
+        }
+      }
+    }, [_vm.editableField.index !== index || _vm.editableField.field !== "note" ? _c("span", [_vm._v(_vm._s(data.note))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.editableField.value,
+        expression: "editableField.value"
+      }],
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: _vm.editableField.value
+      },
+      on: {
+        blur: function blur($event) {
+          return _vm.cancelEdit();
+        },
+        keydown: function keydown($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.saveField(index, "note");
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.editableField, "value", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _vm._m(2, true), _vm._v(" "), _vm._m(3, true)]);
+  }), _vm._v(" "), _vm.allCases.length < 1 ? _c("tr", {
+    staticClass: "bg-light"
+  }, [_c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "22"
+    }
+  }, [_c("vue-simple-spinner")], 1)]) : _vm._e(), _vm._v(" "), !_vm.allCases ? _c("tr", {
+    staticClass: "bg-light"
+  }, [_vm._m(4)]) : _vm._e()], 2)])]), _vm._v(" "), _c("br"), _vm._v(" "), _c("div", {
+    staticClass: "paginationScroll"
+  }, [_vm.paginateCount > 1 ? _c("nav", {
+    staticClass: "w-100",
+    attrs: {
+      "aria-label": "Page navigation example"
+    }
+  }, [_c("ul", {
+    staticClass: "pagination"
+  }, [_vm.page !== 0 ? _c("li", {
+    "class": [_vm.page == 0 ? "disabled" : "", "page-item"],
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getCase(_vm.page - 1);
+      }
+    }
+  }, [_vm._m(5)]) : _vm._e(), _vm._v(" "), _vm._l(_vm.paginateCount, function (index) {
+    return _c("li", {
+      key: index,
+      "class": [_vm.page == index - 1 ? "active" : "", "page-item"],
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          return _vm.getCase(index - 1);
+        }
+      }
+    }, [_c("a", {
+      staticClass: "page-link number",
+      attrs: {
+        href: "#"
+      }
+    }, [_vm._v(_vm._s(index))])]);
+  }), _vm._v(" "), _vm.page !== _vm.paginateCount - 1 ? _c("li", {
+    "class": [_vm.page == _vm.paginateCount - 1 ? "disabled" : "", "page-item"],
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getCase(_vm.page + 1);
+      }
+    }
+  }, [_vm._m(6)]) : _vm._e()], 2)]) : _vm._e()])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "choose-type"
+  }, [_c("div", {
+    staticClass: "type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full bg-blue text-light"
+  }, [_c("span", [_vm._v("VANSUDSKI")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", {
+    staticClass: "bg-blue text-personal-light"
+  }, [_c("tr", [_c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("BR. KANC")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("REG OZNAKE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("MARKA I MODEL")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("IME I PREZIME")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("DATUM SLIKANJA")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("DATUM SLANJA VEŠTAKU")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("DATUM SLANJA NA MAIL")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("DATUM NALAZA")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("T. VEŠTAK")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("DATUM PRIJAVE OS.")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("ROK")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("TRAŽENI IZNOS")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("STATUS")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("BELEŠKA MUP")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("BROJ ŠTETE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("ISPLAĆEN IZNOS")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("PROVIZIJA")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("AT")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("TUŽBA")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("NAPOMENA")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("FAJLOVI")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("OBRIŠI")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("div", {
+    staticClass: "w-100"
+  }, [_c("i", {
+    staticClass: "fa color-blue fa fa-file",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("div", {
+    staticClass: "w-100"
+  }, [_c("i", {
+    staticClass: "fa text-danger fa fa-trash",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "22"
+    }
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("a", {
@@ -8937,9 +10309,9 @@ var render = function render() {
   }, [_c("br"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, _vm._l(_vm.case_types, function (caseType, index) {
-    return _c("div", {
+    return caseType.name !== "VANSUDSKI" ? _c("div", {
       "class": ["type-div-size bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full", caseType.id == _vm.type ? "bg-blue text-light" : ""]
-    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]);
+    }, [_c("span", [_vm._v(_vm._s(caseType.name))])]) : _vm._e();
   }), 0)]), _vm._v(" "), _c("div", {
     staticClass: "container bg-personal-light"
   }, [_c("div", {
@@ -9189,7 +10561,7 @@ var render = function render() {
       },
       expression: "caseData.failDay"
     }
-  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 ? _c("div", {
+  })], 1)]) : _vm._e(), _vm._v(" "), _vm.type == 5 || _vm.type == 1 ? _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -9665,12 +11037,149 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-12 pb-2 pt-2 bg-light"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-4 col-sm-12"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "client1"
+    }
+  }, [_vm._v("STRANKA 1")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.searchData.person_1,
+      expression: "searchData.person_1"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "client1",
+      id: "client1",
+      placeholder: "STRANKA 1"
+    },
+    domProps: {
+      value: _vm.searchData.person_1
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.searchData, "person_1", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-sm-12"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("BROJ U KANCELARIJI")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.searchData.number_office,
+      expression: "searchData.number_office"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "number_court",
+      id: "number_office",
+      placeholder: "BROJ U KANCELARIJI"
+    },
+    domProps: {
+      value: _vm.searchData.number_office
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.searchData, "number_office", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-sm-12"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    staticClass: "text-light",
+    attrs: {
+      "for": "pretraga"
+    }
+  }, [_vm._v("dugme za pretragu")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary w-100 mr-1 pb-6",
+    staticStyle: {
+      height: "32.20px",
+      "padding-bottom": "2.5px",
+      "padding-top": "1.5px"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getTrialDates();
+      }
+    }
+  }, [_vm._v("\n                                PRETRAGA "), _c("i", {
+    staticClass: "fa fa-search",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12"
   }, [_c("br"), _c("br"), _vm._v(" "), _c("FullCalendar", {
     attrs: {
       options: _vm.calendarOptions
     }
-  })], 1)])])]);
+  })], 1)])]), _vm._v(" "), _c("modal", {
+    attrs: {
+      name: "show-cases-search",
+      shiftY: 0.1,
+      scrollable: true,
+      adaptive: true,
+      resizable: true,
+      height: "auto"
+    }
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 mt-4 d-flex justify-content-end w-100"
+  }, [_c("div", {
+    staticClass: "text-right w-25",
+    on: {
+      click: function click($event) {
+        return _vm.closeModal();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-times fa-2x text-muted",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-12 pt-4"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-hover table-text-size table-cursor"
+  }, [_c("thead", {
+    staticClass: "bg-blue text-personal-light"
+  }, [_c("tr", [_c("th", [_vm._v("STRANKA 1")]), _vm._v(" "), _c("th", [_vm._v("STRANKA 2")]), _vm._v(" "), _c("th", [_vm._v("DATUM")]), _vm._v(" "), _c("th", [_vm._v("VREME")]), _vm._v(" "), _c("th", [_vm._v("BROJ U KANCELARIJI")])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.showSearchedData, function (trial, index) {
+    return _vm.showSearchedData.length > 0 ? _c("tr", [_c("td", [_vm._v(_vm._s(trial.prosecutor))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(trial.defendants))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(trial.dateParse))]), _vm._v(" "), _c("td", [_vm._v("\n                                    " + _vm._s(trial.time ? trial.time.slice(0, 5) : "") + "\n                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(trial.numberOffice))])]) : _vm._e();
+  }), _vm._v(" "), _vm.showSearchedData.length == 0 ? _c("tr", {
+    staticClass: "bg-light"
+  }, [_c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "5"
+    }
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])])]) : _vm._e()], 2)]), _vm._v(" "), _c("br")])])])]), _vm._v(" "), _c("br")])], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -9864,34 +11373,47 @@ var render = function render() {
     attrs: {
       "aria-hidden": "true"
     }
-  })])]), _vm._v(" "), _vm.is_admin == 2 ? _c("div", {
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "w-100 mt-3",
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.exportPdf();
+      }
+    }
+  }, [_vm._m(1)]), _vm._v(" "), _c("div", {
     staticClass: "w-100 mt-3"
   }, [_c("add-trial", {
     attrs: {
       date_selected: _vm.date_selected,
       institutions_serchData: _vm.institutionsSerchData
     }
-  })], 1) : _vm._e()])])])])])])]), _vm._v(" "), _c("div", {
+  })], 1)])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-8 col-sm-12 margin-top-table"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-hover table-text-size table-cursor"
-  }, [_vm._m(1), _vm._v(" "), _c("tbody", [_vm._l(_vm.allTrial, function (trial, index) {
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", [_vm._l(_vm.allTrial, function (trial, index) {
     var _trial$institution, _trial$user;
     return _c("tr", [_c("td", {
       on: {
         click: function click($event) {
           $event.preventDefault();
-          return _vm.modalShowTrial(trial);
+          return _vm.changeVisit(trial.id);
         }
       }
-    }, [_c("i", {
-      staticClass: "fa color-blue fa-arrow-circle-o-right",
+    }, [trial.isFinished ? _c("i", {
+      staticClass: "fa fa-circle text-success",
       attrs: {
         "aria-hidden": "true"
       }
-    })]), _vm._v(" "), _c("td", {
+    }) : _vm._e(), _vm._v(" "), !trial.isFinished ? _c("i", {
+      staticClass: "fa fa-circle text-danger",
+      attrs: {
+        "aria-hidden": "true"
+      }
+    }) : _vm._e()]), _vm._v(" "), _c("td", {
       on: {
         click: function click($event) {
           $event.preventDefault();
@@ -9974,11 +11496,11 @@ var render = function render() {
   }, [_c("td", {
     staticClass: "text-center",
     attrs: {
-      colspan: "9"
+      colspan: "10"
     }
   }, [_c("vue-simple-spinner")], 1)]) : _vm._e(), _vm._v(" "), !_vm.allTrial ? _c("tr", {
     staticClass: "bg-light"
-  }, [_vm._m(2)]) : _vm._e()], 2)]), _vm._v(" "), _c("br")]), _vm._v(" "), _c("div", {
+  }, [_vm._m(3)]) : _vm._e()], 2)]), _vm._v(" "), _c("br")]), _vm._v(" "), _c("div", {
     staticClass: "paginationScroll"
   }, [_vm.paginateCount > 1 ? _c("nav", {
     staticClass: "w-100",
@@ -9995,7 +11517,7 @@ var render = function render() {
         return _vm.getTrials(_vm.page - 1);
       }
     }
-  }, [_vm._m(3)]) : _vm._e(), _vm._v(" "), _vm._l(_vm.paginateCount, function (index) {
+  }, [_vm._m(4)]) : _vm._e(), _vm._v(" "), _vm._l(_vm.paginateCount, function (index) {
     return _c("li", {
       key: index,
       "class": [_vm.page == index - 1 ? "active" : "", "page-item"],
@@ -10019,7 +11541,7 @@ var render = function render() {
         return _vm.getTrials(_vm.page + 1);
       }
     }
-  }, [_vm._m(4)]) : _vm._e()], 2)]) : _vm._e()])])])])])]);
+  }, [_vm._m(5)]) : _vm._e()], 2)]) : _vm._e()])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -10033,16 +11555,24 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
+  return _c("button", {
+    staticClass: "btn btn-warning w-100"
+  }, [_vm._v("EXPORT PDF "), _c("i", {
+    staticClass: "fa-solid fa-file-pdf"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
   return _c("thead", {
     staticClass: "bg-blue text-personal-light"
-  }, [_c("tr", [_c("th"), _vm._v(" "), _c("th", [_vm._v("VREME")]), _vm._v(" "), _c("th", [_vm._v("INSTITUCIJA")]), _vm._v(" "), _c("th", [_vm._v("BROJ SUDNICE")]), _vm._v(" "), _c("th", [_vm._v("STRANKA 1")]), _vm._v(" "), _c("th", [_vm._v("STRANKA 2")]), _vm._v(" "), _c("th", [_vm._v("BROJ U KANCELARIJI")]), _vm._v(" "), _c("th", [_vm._v("P BROJ")]), _vm._v(" "), _c("th", [_vm._v("ZAPOSLENI")]), _vm._v(" "), _c("th", [_vm._v("IZMENI")])])]);
+  }, [_c("tr", [_c("th", [_vm._v("PRISUSTVO")]), _vm._v(" "), _c("th", [_vm._v("VREME")]), _vm._v(" "), _c("th", [_vm._v("INSTITUCIJA")]), _vm._v(" "), _c("th", [_vm._v("BROJ SUDNICE")]), _vm._v(" "), _c("th", [_vm._v("STRANKA 1")]), _vm._v(" "), _c("th", [_vm._v("STRANKA 2")]), _vm._v(" "), _c("th", [_vm._v("BROJ U KANCELARIJI")]), _vm._v(" "), _c("th", [_vm._v("P BROJ")]), _vm._v(" "), _c("th", [_vm._v("ZAPOSLENI")]), _vm._v(" "), _c("th", [_vm._v("IZMENI")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("td", {
     staticClass: "text-center",
     attrs: {
-      colspan: "10"
+      colspan: "11"
     }
   }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]);
 }, function () {
@@ -10778,6 +12308,7 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('example-component', (__webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('search-result', (__webpack_require__(/*! ./components/case/SearchResult.vue */ "./resources/js/components/case/SearchResult.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('search-result-vansudski', (__webpack_require__(/*! ./components/case/SearchResultVansudski.vue */ "./resources/js/components/case/SearchResultVansudski.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('calendar', (__webpack_require__(/*! ./components/trial/Calendar.vue */ "./resources/js/components/trial/Calendar.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('date-results', (__webpack_require__(/*! ./components/trial/DateResults.vue */ "./resources/js/components/trial/DateResults.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('staff', (__webpack_require__(/*! ./components/admin/Staff.vue */ "./resources/js/components/admin/Staff.vue")["default"]));
@@ -18310,7 +19841,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media (max-width: 575.98px) {\r\n    .responsive-div-width {\r\n        width: 70%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 576px) and (max-width: 767.98px) {\r\n    .responsive-div-width {\r\n        width: 60%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 768px) and (max-width: 991.98px) {\r\n    .responsive-div-width {\r\n        width: 45%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 20px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 992px) and (max-width: 1199.98px) {\r\n    .responsive-div-width {\r\n        width: 37%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 23px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 65vh !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 1200px) {\r\n    .responsive-div-width {\r\n        width: 35%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 13px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 25px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 80vh !important;\r\n    }\r\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media (max-width: 575.98px) {\r\n    .responsive-div-width {\r\n        width: 70%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n        padding-bottom: 450px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 576px) and (max-width: 767.98px) {\r\n    .responsive-div-width {\r\n        width: 60%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n        padding-bottom: 550px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 768px) and (max-width: 991.98px) {\r\n    .responsive-div-width {\r\n        width: 45%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n        padding-bottom: 400px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 20px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 992px) and (max-width: 1199.98px) {\r\n    .responsive-div-width {\r\n        width: 37%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n        padding-bottom: 300px !important;\r\n\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 23px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 65vh !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 1200px) {\r\n    .responsive-div-width {\r\n        width: 35%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n        padding-bottom: 200px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 13px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 25px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 80vh !important;\r\n    }\r\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -18334,7 +19865,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 250px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 33.33%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    width: 33.33%;\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100% !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -18431,6 +19962,33 @@ ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_u
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_public_css_responsive_css__WEBPACK_IMPORTED_MODULE_3__["default"]);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "\r\n\r\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! -!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-select/dist/vue-select.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-select/dist/vue-select.css");
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\ntbody td input[data-v-6c30b84e] {\n    width: 100%;\n    border: none;\n    outline: none;\n    background: transparent;\n    padding: 0;\n}\n.table-responsive[data-v-6c30b84e] {\n    overflow-x: auto; /* Horizontalni skrol ako je širina veća od dostupnog prostora */\n}\n.table th[data-v-6c30b84e]{\n    white-space: nowrap; /* Sprečava prelazak teksta u novi red */\n    text-align: center; /* Centriraj tekst u kolonama */\n}\n.table th[data-v-6c30b84e], td[data-v-6c30b84e] {\n    min-width: 20px; /* Minimalna širina za th elemente */\n    max-width: 300px; /* Minimalna širina za th elemente */\n}\n.table[data-v-6c30b84e] {\n    table-layout: auto; /* Automatska raspodela širine kolona */\n    width: 100%; /* Tabela zauzima punu širinu */\n}\ninput[type=\"date\"][data-v-6c30b84e]::-webkit-calendar-picker-indicator {\n    font-size: 20px; /* Povećavanje */\n    width: 18px;\n    height: 18px;\n    cursor: pointer;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -18562,7 +20120,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media (max-width: 575.98px) {\r\n    .responsive-div-width {\r\n        width: 70%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 576px) and (max-width: 767.98px) {\r\n    .responsive-div-width {\r\n        width: 60%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 768px) and (max-width: 991.98px) {\r\n    .responsive-div-width {\r\n        width: 45%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 20px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 992px) and (max-width: 1199.98px) {\r\n    .responsive-div-width {\r\n        width: 37%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 23px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 65vh !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 1200px) {\r\n    .responsive-div-width {\r\n        width: 35%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 13px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 25px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 80vh !important;\r\n    }\r\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media (max-width: 575.98px) {\r\n    .responsive-div-width {\r\n        width: 70%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n        padding-bottom: 450px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 576px) and (max-width: 767.98px) {\r\n    .responsive-div-width {\r\n        width: 60%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 50px;\r\n        margin-bottom: 50px;\r\n        padding-bottom: 550px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 11.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 17px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 70vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 768px) and (max-width: 991.98px) {\r\n    .responsive-div-width {\r\n        width: 45%;\r\n    }\r\n\r\n    .options-first {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n        padding-bottom: 400px !important;\r\n\r\n    }\r\n\r\n    .options-secound {\r\n        margin-top: 20px;\r\n        margin-bottom: 100px;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 70px;\r\n        margin-bottom: 70px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .margin-top-table {\r\n        margin-top: 50px\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 20px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 992px) and (max-width: 1199.98px) {\r\n    .responsive-div-width {\r\n        width: 37%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n        padding-bottom: 300px !important;\r\n\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 12.5px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 23px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 65vh !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 75vh !important;\r\n    }\r\n}\r\n\r\n@media (min-width: 1200px) {\r\n    .responsive-div-width {\r\n        width: 35%;\r\n    }\r\n\r\n    .options-first-lg {\r\n        margin-top: 80px;\r\n        margin-bottom: 80px;\r\n        padding-bottom: 200px;\r\n    }\r\n\r\n    .table-text-size {\r\n        font-size: 13px;\r\n    }\r\n\r\n    .fc-toolbar-title {\r\n        font-size: 25px !important;\r\n    }\r\n\r\n    .fc .fc-scrollgrid-liquid {\r\n        height: 80vh !important;\r\n    }\r\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -18586,7 +20144,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 250px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 33.33%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    width: 33.33%;\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100% !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -48879,6 +50437,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_style_index_0_id_6c30b84e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_style_index_0_id_6c30b84e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_style_index_0_id_6c30b84e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/trial/Calendar.vue?vue&type=style&index=0&id=4ff905c2&scoped=true&lang=css&":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/trial/Calendar.vue?vue&type=style&index=0&id=4ff905c2&scoped=true&lang=css& ***!
@@ -50280,6 +51868,47 @@ component.options.__file = "resources/js/components/case/SearchResult.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/case/SearchResultVansudski.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/case/SearchResultVansudski.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true& */ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true&");
+/* harmony import */ var _SearchResultVansudski_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchResultVansudski.vue?vue&type=script&lang=js& */ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js&");
+/* harmony import */ var _SearchResultVansudski_vue_vue_type_style_index_0_id_6c30b84e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& */ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _SearchResultVansudski_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "6c30b84e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/case/SearchResultVansudski.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/case/ShowCase.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/case/ShowCase.vue ***!
@@ -50622,6 +52251,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResultVansudski.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/case/ShowCase.vue?vue&type=script&lang=js&":
 /*!****************************************************************************!*\
   !*** ./resources/js/components/case/ShowCase.vue?vue&type=script&lang=js& ***!
@@ -50816,6 +52461,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResult_vue_vue_type_template_id_06fa8fc9_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResult_vue_vue_type_template_id_06fa8fc9_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResult.vue?vue&type=template&id=06fa8fc9&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResult.vue?vue&type=template&id=06fa8fc9&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true& ***!
+  \***********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_template_id_6c30b84e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=template&id=6c30b84e&scoped=true&");
 
 
 /***/ }),
@@ -51035,6 +52697,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResult_vue_vue_type_style_index_0_id_06fa8fc9_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResult.vue?vue&type=style&index=0&id=06fa8fc9&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResult.vue?vue&type=style&index=0&id=06fa8fc9&scoped=true&lang=css&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchResultVansudski_vue_vue_type_style_index_0_id_6c30b84e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/SearchResultVansudski.vue?vue&type=style&index=0&id=6c30b84e&scoped=true&lang=css&");
 
 
 /***/ }),

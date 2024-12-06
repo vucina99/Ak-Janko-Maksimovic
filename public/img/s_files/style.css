@@ -157,7 +157,7 @@ footer p{
     font-size: 15px;
 }
 .type-div-size{
-    width: 33.33%;
+    width: 100%;
     cursor: pointer;
 }
 .type-div-size:hover{

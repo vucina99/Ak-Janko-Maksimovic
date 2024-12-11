@@ -430,7 +430,6 @@ export default {
                 this.caseData['case_type_id'] = this.type
                 this.fileData = data.caseFiles
                 this.loader = false;
-                console.log( data.case);
             }).catch((error) => {
                 alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
             })

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Imports\ImportParnicniExcelData;
+use App\Imports\ImportVansudskiExcelData;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
@@ -18,4 +19,17 @@ class ImportController extends Controller
 
         dd("uspesno");
     }
+
+    public function importVansudski(Request $request)
+    {
+        $file = public_path("/excel/evidencijasteta.ods");
+        if (!file_exists($file)) {
+            dd("nema fajla");
+        }
+
+        Excel::import(new ImportVansudskiExcelData(), $file);
+
+        dd("uspesno");
+    }
+
 }

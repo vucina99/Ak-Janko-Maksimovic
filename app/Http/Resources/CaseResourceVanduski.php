@@ -15,6 +15,17 @@ class CaseResourceVanduski extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->date_of_reporting_to_insurance){
+            $dateOfReporting = Carbon::parse($this->date_of_reporting_to_insurance);
+            $today = Carbon::now();
+            $differenceInDays = $dateOfReporting->diffInDays($today);
+            if (!$dateOfReporting->isPast()) {
+                $differenceInDays = 0;;
+            }
+        }else{
+            $differenceInDays = null;
+        }
+
         return [
             'id' => $this->id,
             'number_office' => $this->number_office,
@@ -29,7 +40,7 @@ class CaseResourceVanduski extends JsonResource
             'date_send_to_mail' => !$this->date_send_to_mail  ? null : Carbon::parse($this->date_send_to_mail)->format("d-m-Y"),
             'date_of_findings' => !$this->date_of_findings  ? null : Carbon::parse($this->date_of_findings)->format("d-m-Y"),
             'date_of_reporting_to_insurance' => !$this->date_of_reporting_to_insurance  ? null : Carbon::parse($this->date_of_reporting_to_insurance)->format("d-m-Y"),
-            'deadline' => $this->deadline,
+            'deadline' => $differenceInDays,
             'requested_amount' => $this->requested_amount,
             'paid_amount' => $this->paid_amount,
             'status' => $this->status,

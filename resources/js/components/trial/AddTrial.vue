@@ -211,7 +211,6 @@ export default {
     },
     methods: {
         createTrial() {
-            console.log(this.trialData);
             axios.post('/trial/create/trial', this.trialData).then(({data}) => {
                 this.success = true;
                 this.$root.$emit("addNewTrialInArray", data);

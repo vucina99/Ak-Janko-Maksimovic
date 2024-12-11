@@ -204,7 +204,6 @@ export default {
         getUsers() {
             axios.get('/admin/get/users').then(({data}) => {
                 this.users = data
-                console.log(data);
             })
         },
         deleteUser(id, index) {

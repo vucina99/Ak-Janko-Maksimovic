@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/all-trial-from/{date}', [TrialController::class, 'dateResult']);
     Route::post('/logout-form', [HomeController::class, 'logoutForm'])->name('logout-form');
     Route::get('/import/parnicni', [ImportController::class, 'importParnicni']);
+    Route::get('/import/vansudski', [ImportController::class, 'importVansudski']);
 
 });
 

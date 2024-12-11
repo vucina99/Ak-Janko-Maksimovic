@@ -16,6 +16,14 @@ class ImportParnicniExcelData implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
+
+        $existingCase = _Case::where('number_office', $row[0])->first();
+
+        if ($existingCase) {
+            // Ako zapis već postoji, preskoči unos
+            return null;
+        }
+
         return new _Case([
             "case_type_id" => str_contains(strtolower($row[1]), 'prekršaj') ? 3 :  1,
             "number_office" =>  $row[0],

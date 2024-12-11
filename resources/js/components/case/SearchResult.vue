@@ -353,7 +353,6 @@ export default {
 
                 this.person_1_list = data.person_1_list;
                 this.person_2_list = data.person_2_list;
-                console.log(data)
             }).catch((error) => {
                 alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
             })
@@ -432,7 +431,6 @@ export default {
         getCaseType() {
             axios.get('/case/get/type').then(({data}) => {
                 this.caseTypes = data
-                console.log(data);
             })
         },
     },

@@ -18,6 +18,10 @@ Route::group(['prefix' => 'case'], function () {
 
 
     Route::post('/files/upload', [CaseController::class, 'filesUpload'])->middleware("adminHttp");
+
+    Route::post('/files/upload/vansudski', [CaseController::class, 'filesUploadVansudski'])->middleware("adminHttp");
+
+
     Route::post('/update/files', [CaseController::class, 'updateFiles'])->middleware("adminHttp");
     Route::get('/get/case/{id}', [CaseController::class, 'getCaseById']);
     Route::delete('/remove/file/{id}', [CaseController::class, 'removeFile'])->middleware("adminHttp");

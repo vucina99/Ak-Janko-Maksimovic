@@ -12,6 +12,7 @@ use App\Models\CaseType;
 use App\Models\Institution;
 use Aws\S3\S3Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -87,7 +88,7 @@ class CaseController extends Controller
 
     public function getCasesVansudski(Request $request)
     {
-        $numberData = 50;
+        $numberData = 100;
         $case_type_id = $request->caseType;
         $search = (object)$request->search;
         $page = $request->page;
@@ -95,26 +96,35 @@ class CaseController extends Controller
 
         $cases = _Case::where('case_type_id', 5);
 
-        if ($search->institution_number !== '' && $search->institution_number !== null) {
-            $cases = $cases->where('number_institution', 'LIKE', '%' . $search->institution_number. '%');
+        if ($search->status !== '' && $search->status !== null) {
+            $cases = $cases->where('status', 'LIKE', '%' . $search->status. '%');
         }
         if ($search->number_office !== '' && $search->number_office !== null) {
-            $cases = $cases->where('number_office',  'LIKE', '%' .$search->number_office. '%');
+            $cases = $cases->where('vansudski_number',  'LIKE', '%' .$search->number_office. '%');
         }
         if ($search->person_1 !== '' && $search->person_1 !== null) {
             $cases = $cases->where('prosecutor', 'LIKE', '%' . $search->person_1['prosecutor'] . '%');
         }
-        if ($search->person_2 !== '' && $search->person_2 !== null) {
-            $cases = $cases->where('defendants', 'LIKE', '%' . $search->person_2['defendants'] . '%');
-        }
+
 
         if ($search->mark !== '' && $search->mark !== null) {
             $cases = $cases->where('mark',  'LIKE', '%' .$search->mark. '%');
         }
+
+        if ($search->datumSlikanjaOdOriginal !== '' && $search->datumSlikanjaOdOriginal !== null) {
+            $date = Carbon::parse($search->datumSlikanjaOdOriginal)->format("Y-m-d");
+            $cases = $cases->where('fail_day', '>=', $date);
+        }
+        if ($search->datumSlikanjaDoOriginal !== '' && $search->datumSlikanjaDoOriginal !== null) {
+            $date = Carbon::parse($search->datumSlikanjaDoOriginal)->format("Y-m-d");
+            $cases = $cases->where('fail_day', '<=', $date);
+        }
+
+        $maxCount = $cases->count();
         $count = ceil($cases->count() / $numberData);
         $cases = $cases->orderBy(DB::raw('CAST(id AS SIGNED)'), 'DESC')->skip($page * $numberData)->take($numberData)->get();
 
-        return response(['data' => CaseResourceVanduski::collection($cases), 'count' => $count]);
+        return response(['data' => CaseResourceVanduski::collection($cases), 'count' => $count , 'maxCount' => $maxCount , 'numberData' => $numberData ]);
     }
 
 
@@ -241,6 +251,113 @@ class CaseController extends Controller
 
         return response(['ids' => $dataUpload]);
     }
+
+
+
+
+
+
+    public function filesUploadVansudski(Request $request)
+    {
+        $dataUpload = [];
+        if ($request->hasFile('files')) {
+            $filesData = []; // Akumulira podatke o fajlovima za kasniju obradu
+
+            // Kreiraj S3Client
+            $s3Client = new S3Client([
+                'version' => 'latest',
+                'region' => env('AWS_DEFAULT_REGION'),
+                'credentials' => [
+                    'key'    => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                ],
+            ]);
+
+            foreach ($request->file('files') as $file) {
+                // Generiši ime fajla
+                $nameOriginalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $name = $nameOriginalName . '-G-' . date('Y-m-d') . '-' . rand(10, 100000) . '.' . $file->getClientOriginalExtension();
+
+                // Inicijalizuj multipart upload
+                $result = $s3Client->createMultipartUpload([
+                    'Bucket' => env('AWS_BUCKET'),
+                    'Key' => $name,
+                ]);
+
+                $uploadId = $result['UploadId'];
+                $parts = []; // Ovo treba biti niz
+                $partNumber = 1;
+
+                // Učitaj svaki deo
+                $filePath = $file->getRealPath();
+                $handle = fopen($filePath, 'rb');
+                $partSize = 5 * 1024 * 1024; // 5 MB po delu
+
+                while (!feof($handle)) {
+                    // Pročitaj deo fajla
+                    $data = fread($handle, $partSize);
+
+                    // Proveri da li je deo prazna
+                    if (strlen($data) === 0) {
+                        break; // Ako nema više podataka, izađi iz petlje
+                    }
+
+                    // Učitaj deo na S3
+                    $result = $s3Client->uploadPart([
+                        'Bucket' => env('AWS_BUCKET'),
+                        'Key' => $name,
+                        'UploadId' => $uploadId,
+                        'PartNumber' => $partNumber,
+                        'Body' => $data,
+                    ]);
+
+                    // Dodaj informacije o delu
+                    $parts[] = [  // Ovo treba biti niz
+                        'ETag' => $result['ETag'],
+                        'PartNumber' => $partNumber,
+                    ];
+                    $partNumber++;
+                }
+                fclose($handle);
+
+                // Završite multipart upload
+                $s3Client->completeMultipartUpload([
+                    'Bucket' => env('AWS_BUCKET'),
+                    'Key' => $name,
+                    'UploadId' => $uploadId,
+                    'MultipartUpload' => [
+                        'Parts' => $parts, // Ovo treba biti niz
+                    ],
+                ]);
+
+                // Dodaj podatke u privremeni niz
+                $filesData[] = [
+                    'name' => $name,
+                    'path' => $nameOriginalName,
+                    'upload_date' => date('Y-m-d'),
+                ];
+            }
+
+            // Sačuvaj sve fajlove u bazi odjednom
+            foreach ($filesData as $fileData) {
+                $caseFile = new CaseFile();
+                $caseFile->name = $fileData['name'];
+                $caseFile->path = $fileData['path'];
+                $caseFile->case_id = 5;
+                $caseFile->upload_date = $fileData['upload_date'];
+                $caseFile->save();
+
+                // Dodaj ID u niz
+                $dataUpload[] = $caseFile->id;
+            }
+        }
+
+        return response(['ids' => $dataUpload]);
+    }
+
+
+
+
 
     public function updateFiles(Request $request)
     {

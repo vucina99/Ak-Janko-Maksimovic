@@ -29,7 +29,6 @@ class CreateCasesTable extends Migration
             $table->date('date_send_to_mail')->nullable();
             $table->date('date_of_findings')->nullable();
             $table->date('date_of_reporting_to_insurance')->nullable();
-            $table->string('deadline')->nullable();
             $table->string('requested_amount')->nullable();
             $table->string('paid_amount')->nullable();
             $table->string('expert_costs')->nullable();

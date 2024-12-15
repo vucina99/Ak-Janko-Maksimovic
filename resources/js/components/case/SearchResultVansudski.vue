@@ -1,7 +1,7 @@
 <template>
     <div class="options-first options-first-lg">
         <vue-confirm-dialog></vue-confirm-dialog>
-        <edit-files :is_admin="is_admin"></edit-files>
+        <edit-files :type="type" :is_admin="is_admin"></edit-files>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
@@ -297,12 +297,12 @@
                                 </td>
                             </tr>
                             <tr v-if="allCases.length < 1" class="bg-light">
-                                <td colspan="22" class="text-center">
+                                <td colspan="23" class="text-center">
                                     <vue-simple-spinner></vue-simple-spinner>
                                 </td>
                             </tr>
                             <tr v-if="!allCases" class="bg-light">
-                                <td colspan="22" class="text-center"><span>NEMA PODATAKA ZA PRIKAZ</span></td>
+                                <td colspan="23" class="text-center"><span>NEMA PODATAKA ZA PRIKAZ</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -508,7 +508,9 @@ export default {
          * @param {Number} page - Trenutna stranica.
          */
         getCase(page = 0) {
-            this.allCases = [];
+            if(page !== this.page){
+                this.allCases = [];
+            }
             this.page = page
 
             if (this.search.datumSlikanjaOd !== "" && this.search.datumSlikanjaOd !== null) {

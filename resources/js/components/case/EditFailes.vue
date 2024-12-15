@@ -43,7 +43,7 @@
                                             <form action="" method="post" class="add-form-modal text-left"
                                                   v-if="caseData !== null " :hidden="loader">
 
-                                                <div class="pb-3" >
+                                                <div class="pb-3" v-if="is_admin == 2">
                                                     <label>DOKUMENTI</label>
                                                     <div class="input-group custom-file-button">
                                                         <span class="input-group-text "><i class="fa fa-search-plus"
@@ -52,7 +52,7 @@
                                                                id="inputGroupFile">
                                                     </div>
                                                 </div>
-                                                <div class="pb-1 pt-4" >
+                                                <div class="pb-1 pt-4" v-if="is_admin == 2">
                                                     <button class="btn btn-primary w-100" @click.prevent="editCase()">
                                                         DODAJ FAJLOVE &nbsp; <i
                                                         class="fa fa-spinner" aria-hidden="true"></i>
@@ -127,7 +127,7 @@ import DatePicker from 'vue2-datepicker';
 
 export default {
     name: "EditFailes",
-    props: ['type', 'case_types', 'institutionsSerchData' , 'is_admin'],
+    props: ['type', 'is_admin'],
     data() {
         return {
             loader: true,
@@ -184,6 +184,7 @@ export default {
             this.success = false;
 
             const formData = new FormData();
+            formData.append('caseID', this.caseID); // Dodaj caseID u formu
             for (var i = 0; i < this.$refs.file.files.length; i++) {
                 let file = this.$refs.file.files[i];
                 formData.append('files[' + i + ']', file);
@@ -197,6 +198,8 @@ export default {
             ).then(({data}) => {
                 this.getCase();
                 this.success = true;
+                this.$refs.file.value = "";
+
 
             }).catch((error) => {
                 console.log(error);
@@ -205,8 +208,6 @@ export default {
 
         },
         removeFile(fileId, index) {
-
-
             this.$confirm({
                 message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE FAJL?',
                 button: {
@@ -220,12 +221,28 @@ export default {
                 callback: confirm => {
                     if (confirm) {
                         this.loader = true;
-                        axios.delete('case/remove/file/' + fileId).then(({data}) => {
+                        axios.delete('/case/remove/file/' + fileId).then(({data}) => {
                             const filter = this.fileData.filter((value, key) => {
                                 return key !== index
                             });
                             this.fileData = filter;
                             this.loader = false;
+                            this.$confirm({
+                                message: 'USPEŠNO BRISANJE',
+                                button: {
+                                    yes: 'OK'
+                                },
+                                /**
+                                 * Callback Function
+                                 * @param {Boolean} confirm
+                                 */
+                                callback: confirm => {
+                                    if (confirm) {
+
+                                    }
+                                }
+                            })
+
                         }).catch((error) => {
                             alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE')
                         });
@@ -239,6 +256,8 @@ export default {
                 this.caseData = data.case
                 this.caseData['case_type_id'] = this.type
                 this.fileData = data.caseFiles
+                console.log(data)
+                console.log( this.fileData )
                 this.loader = false;
             }).catch((error) => {
                 alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')

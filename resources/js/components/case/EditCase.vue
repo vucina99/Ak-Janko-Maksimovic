@@ -377,6 +377,8 @@ export default {
                         this.getCase();
                         this.$root.$emit('addEditedCaseInArray', {'caseData': this.caseData, 'caseIndex': this.caseIndex});
                         this.success= true;
+                        this.$refs.file.value = "";
+
                     })
                         .catch((error) => {
                             alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE')
@@ -408,7 +410,7 @@ export default {
                 callback: confirm => {
                     if (confirm) {
                         this.loader = true;
-                        axios.delete('case/remove/file/' + fileId).then(({data}) => {
+                        axios.delete('/case/remove/file/' + fileId).then(({data}) => {
                             const filter = this.fileData.filter((value, key) => {
                                 return key !== index
                             });

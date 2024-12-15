@@ -257,7 +257,7 @@ class CaseController extends Controller
 
 
 
-    public function filesUploadVansudski(Request $request)
+    public function filesUploadVansudski( Request $request)
     {
         $dataUpload = [];
         if ($request->hasFile('files')) {
@@ -343,7 +343,7 @@ class CaseController extends Controller
                 $caseFile = new CaseFile();
                 $caseFile->name = $fileData['name'];
                 $caseFile->path = $fileData['path'];
-                $caseFile->case_id = 5;
+                $caseFile->case_id = $request->caseID;
                 $caseFile->upload_date = $fileData['upload_date'];
                 $caseFile->save();
 
@@ -421,8 +421,9 @@ class CaseController extends Controller
 
                 return response('{}', 404);
             }
-            $caseFile->path = $request->path;
-            $caseFile->save();
+            CaseFile::where("id" ,$id)->update([
+                "path" => $request->path
+            ]);
 
 
 

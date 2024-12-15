@@ -87,9 +87,13 @@
                                                                    aria-hidden="true"></i>
                                                             </a>
                                                         </td>
-                                                        <td @click.prevent="removeFile(file.id , key)">
+                                                        <td v-if="is_admin == 2" @click.prevent="removeFile(file.id , key)">
                                                             <i class="fa fa-trash text-danger file-small-text"
                                                                aria-hidden="true"></i>
+                                                        </td>
+                                                        <td v-else>
+                                                            <i class="fa text-danger fa-solid fa-ban"
+                                                                                         aria-hidden="true"></i>
                                                         </td>
                                                     </tr>
                                                     <td v-if="fileData.length < 1" colspan="4"
@@ -208,6 +212,7 @@ export default {
 
         },
         removeFile(fileId, index) {
+            if (this.is_admin == 1) return false;
             this.$confirm({
                 message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE FAJL?',
                 button: {

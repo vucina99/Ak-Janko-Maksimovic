@@ -6366,6 +6366,7 @@ __webpack_require__.r(__webpack_exports__);
       allCaseLength: 0,
       allCases: [],
       // Svi slučajevi
+      colorArray: [],
       editableField: {
         index: null,
         field: null,
@@ -6402,6 +6403,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    addToColorArray: function addToColorArray(id) {
+      this.colorArray = [];
+      this.colorArray.push(id);
+    },
     modalEditFiles: function modalEditFiles(data, index) {
       this.$modal.show('edit-files-modal', {
         'caseID': data,
@@ -7003,13 +7008,41 @@ __webpack_require__.r(__webpack_exports__);
     },
     changeVisit: function changeVisit(id) {
       var _this4 = this;
-      axios.post('/trial/change-visit', {
-        id: id
-      }).then(function (_ref4) {
-        var data = _ref4.data;
-        _this4.getTrials();
-      })["catch"](function (error) {
-        alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora');
+      this.$confirm({
+        message: 'DA LI STE SIGURNI DA ŽELITE DA IZMENITE AKTIVNOST?',
+        button: {
+          no: 'NE',
+          yes: 'DA'
+        },
+        /**
+         * Callback Function
+         * @param {Boolean} confirm
+         */
+        callback: function callback(confirm) {
+          if (confirm) {
+            axios.post('/trial/change-visit', {
+              id: id
+            }).then(function (_ref4) {
+              var data = _ref4.data;
+              _this4.getTrials();
+              _this4.$confirm({
+                message: 'USPEŠNO STE IZMENILI AKTIVNOST',
+                button: {
+                  yes: 'OK'
+                },
+                /**
+                 * Callback Function
+                 * @param {Boolean} confirm
+                 */
+                callback: function callback(confirm) {
+                  if (confirm) {}
+                }
+              });
+            })["catch"](function (error) {
+              alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora');
+            });
+          }
+        }
       });
     }
   },
@@ -7466,12 +7499,12 @@ var render = function render() {
           return _vm.changeActivation(institution, index);
         }
       }
-    }, [institution.activation ? _c("i", {
+    }, [institution.activation == 1 ? _c("i", {
       staticClass: "fa fa-circle text-success",
       attrs: {
         "aria-hidden": "true"
       }
-    }) : _vm._e(), _vm._v(" "), !institution.activation ? _c("i", {
+    }) : _vm._e(), _vm._v(" "), institution.activation == 0 ? _c("i", {
       staticClass: "fa fa-circle text-danger",
       attrs: {
         "aria-hidden": "true"
@@ -9887,12 +9920,18 @@ var render = function render() {
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), _c("div", {
-    staticClass: "table-responsive"
+    staticClass: "table-wrapper"
   }, [_c("table", {
     staticClass: "table table-hover table-text-size table-cursor"
   }, [_vm._m(1), _vm._v(" "), _c("tbody", [_vm._l(_vm.allCases, function (data, index) {
     return _c("tr", {
-      key: index
+      key: index,
+      style: _vm.colorArray.includes(data.id) ? "background-color:#f2f2f2 !important" : "",
+      on: {
+        click: function click($event) {
+          return _vm.addToColorArray(data.id);
+        }
+      }
     }, [_c("td", [_vm._v(_vm._s(_vm.getRowNumber(index)))]), _vm._v(" "), _c("td", {
       on: {
         dblclick: function dblclick($event) {
@@ -10648,7 +10687,7 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", {
-    staticClass: "bg-blue text-personal-light"
+    staticClass: "sticky-thead bg-blue text-personal-light"
   }, [_c("tr", [_c("th", {
     attrs: {
       scope: "col"
@@ -11762,7 +11801,7 @@ var render = function render() {
     staticClass: "col-lg-4 col-sm-12"
   }, [_c("div", {
     staticClass: "choose-type"
-  }, [_c("show-trial", {
+  }, [_c("vue-confirm-dialog"), _vm._v(" "), _c("show-trial", {
     attrs: {
       date_selected: _vm.date_selected
     }
@@ -11953,12 +11992,12 @@ var render = function render() {
           return _vm.changeVisit(trial.id);
         }
       }
-    }, [trial.isFinished ? _c("i", {
+    }, [trial.isFinished == 1 ? _c("i", {
       staticClass: "fa fa-circle text-success",
       attrs: {
         "aria-hidden": "true"
       }
-    }) : _vm._e(), _vm._v(" "), !trial.isFinished ? _c("i", {
+    }) : _vm._e(), _vm._v(" "), trial.isFinished == 0 ? _c("i", {
       staticClass: "fa fa-circle text-danger",
       attrs: {
         "aria-hidden": "true"
@@ -20577,7 +20616,7 @@ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBP
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_2__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntbody td input[data-v-6c30b84e] {\n    width: 100%;\n    border: none;\n    outline: none;\n    background: transparent;\n    padding: 0;\n}\n.table-responsive[data-v-6c30b84e] {\n    overflow-x: auto;\n}\n.table th[data-v-6c30b84e] {\n    white-space: nowrap;\n    text-align: center;\n}\n.table th[data-v-6c30b84e], td[data-v-6c30b84e] {\n    min-width: 20px;\n    max-width: 300px;\n}\n.table[data-v-6c30b84e] {\n    width: 100%; /* Tabela zauzima punu širinu */\n}\ninput[type=\"date\"][data-v-6c30b84e]::-webkit-calendar-picker-indicator {\n    font-size: 20px; /* Povećavanje */\n    width: 18px;\n    height: 18px;\n    cursor: pointer;\n}\n.first_last_name[data-v-6c30b84e] {\n    min-width: 230px;\n    max-width: 1700px;\n    white-space: nowrap;\n}\n.not[data-v-6c30b84e] {\n    min-width: 400px;\n    max-width: 1700px;\n    white-space: pre-wrap;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntbody td input[data-v-6c30b84e] {\n    width: 100%;\n    border: none;\n    outline: none;\n    background: transparent;\n    padding: 0;\n}\n.table-responsive[data-v-6c30b84e] {\n    overflow-x: auto;\n}\n.table th[data-v-6c30b84e] {\n    white-space: nowrap;\n    text-align: center;\n}\n.table th[data-v-6c30b84e], td[data-v-6c30b84e] {\n    min-width: 20px;\n    max-width: 300px;\n}\n.table td[data-v-6c30b84e] {\n    border: 0.5px solid #cce6ff !important;\n}\n.table[data-v-6c30b84e] {\n    width: 100%; /* Tabela zauzima punu širinu */\n}\ninput[type=\"date\"][data-v-6c30b84e]::-webkit-calendar-picker-indicator {\n    font-size: 20px; /* Povećavanje */\n    width: 18px;\n    height: 18px;\n    cursor: pointer;\n}\n.first_last_name[data-v-6c30b84e] {\n    min-width: 230px;\n    max-width: 1700px;\n    white-space: nowrap;\n}\n.not[data-v-6c30b84e] {\n    min-width: 400px;\n    max-width: 1700px;\n    white-space: pre-wrap;\n}\n.table-wrapper[data-v-6c30b84e] {\n    /* Podesi visinu po potrebi */\n    max-height: 80vh;\n    overflow-y: auto; /* Vertikalni scroll */\n    overflow-x: auto; /* Horizontalni scroll, po potrebi */\n    position: relative;\n}\n.sticky-thead th[data-v-6c30b84e] {\n    position: sticky;\n    top: 0;\n    z-index: 999;\n    background: #003366;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

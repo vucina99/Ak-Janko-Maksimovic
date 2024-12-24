@@ -96,7 +96,7 @@ class User extends Authenticatable
 
     public function getUsersWithOutAdmin()
     {
-        $users = User::orderBy('name')->where('role_id', 1)->get();
+        $users = User::orderBy('name')->where("id" , ">" , 1)->get();
         return $users;
     }
 

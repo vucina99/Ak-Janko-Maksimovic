@@ -107,9 +107,9 @@
                                     <td>{{ institution.institution_type.name }}</td>
                                     <td @click.prevent="changeActivation(institution,index)">
 
-                                        <i class="fa fa-circle text-success" v-if="institution.activation  "
+                                        <i class="fa fa-circle text-success" v-if="institution.activation == 1  "
                                            aria-hidden="true"></i>
-                                        <i class="fa fa-circle text-danger" v-if="!institution.activation  "
+                                        <i class="fa fa-circle text-danger" v-if="institution.activation == 0  "
                                            aria-hidden="true"></i>
                                     </td>
                                 </tr>

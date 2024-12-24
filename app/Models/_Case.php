@@ -14,6 +14,7 @@ class _Case extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'number_office',
         'number_institution',
         'prosecutor',

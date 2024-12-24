@@ -51,7 +51,7 @@ class CaseController extends Controller
 
     public function getCases(Request $request)
     {
-        $numberData = 25;
+        $numberData = 50;
         $case_type_id = $request->caseType;
         $search = (object)$request->search;
         $page = $request->page;
@@ -88,7 +88,7 @@ class CaseController extends Controller
 
     public function getCasesVansudski(Request $request)
     {
-        $numberData = 100;
+        $numberData = 150;
         $case_type_id = $request->caseType;
         $search = (object)$request->search;
         $page = $request->page;
@@ -130,7 +130,7 @@ class CaseController extends Controller
 
     public function getInstitutions(Request $request)
     {
-        $institution = Institution::orderBy('name')->whereIn('institution_type_id', $request->institutionsType)->get();
+        $institution = Institution::orderBy('name')->whereIn('institution_type_id', $request->institutionsType)->where("activation" , 1)->get();
         return response(InstitutionResource::collection($institution));
     }
 

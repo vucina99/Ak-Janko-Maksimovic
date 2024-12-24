@@ -84,11 +84,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 col-sm-12 margin-top-table pr-3 pl-3">
-                    <button v-if="is_admin == 2" class="btn btn-success px-5" @click="addNewCase()">DODAJ <i class="fa fa-plus"
-                                                                                        aria-hidden="true"></i></button>
-                    <div class="table-responsive">
+                    <button v-if="is_admin == 2" class="btn btn-success px-5" @click="addNewCase()">DODAJ <i
+                        class="fa fa-plus"
+                        aria-hidden="true"></i></button>
+                    <div class="table-wrapper">
                         <table class="table table-hover table-text-size table-cursor">
-                            <thead class="bg-blue text-personal-light">
+                            <!-- Dodali smo .sticky-thead klasu na thead -->
+                            <thead class="sticky-thead bg-blue text-personal-light">
                             <tr>
                                 <th scope="col">BR.</th>
                                 <th scope="col">BR. KANC</th>
@@ -116,7 +118,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(data, index) in allCases" :key="index">
+                            <tr v-for="(data, index) in allCases" :key="index" @click="addToColorArray(data.id)"
+                                :style="colorArray.includes(data.id) ? 'background-color:#f2f2f2 !important' : ''">
                                 <td>{{ getRowNumber(index) }}</td>
                                 <td @dblclick="editField(index, 'vansudski_number')">
                                     <span
@@ -353,6 +356,7 @@ export default {
         return {
             allCaseLength: 0,
             allCases: [], // Svi slučajevi
+            colorArray: [],
             editableField: {index: null, field: null, value: '', originalValue: ''}, // Držimo trenutno uređeno polje
             search: {
                 status: '',
@@ -383,6 +387,11 @@ export default {
     },
 
     methods: {
+        addToColorArray(id) {
+            this.colorArray = [];
+            this.colorArray.push(id);
+
+        },
         modalEditFiles(data, index) {
             this.$modal.show('edit-files-modal', {'caseID': data, 'caseIndex': index});
         },
@@ -508,7 +517,7 @@ export default {
          * @param {Number} page - Trenutna stranica.
          */
         getCase(page = 0) {
-            if(page !== this.page){
+            if (page !== this.page) {
                 this.allCases = [];
             }
             this.page = page
@@ -604,6 +613,11 @@ tbody td input {
     max-width: 300px;
 }
 
+.table td {
+    border: 0.5px solid #cce6ff !important;
+
+}
+
 .table {
     width: 100%; /* Tabela zauzima punu širinu */
 }
@@ -627,4 +641,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     white-space: pre-wrap;
 }
 
+.table-wrapper {
+    /* Podesi visinu po potrebi */
+    max-height: 80vh;
+    overflow-y: auto; /* Vertikalni scroll */
+    overflow-x: auto; /* Horizontalni scroll, po potrebi */
+    position: relative;
+}
+
+.sticky-thead th {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #003366;
+}
 </style>

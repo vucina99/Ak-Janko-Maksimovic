@@ -15,7 +15,7 @@ class CreateCasesTable extends Migration
     {
         Schema::create('__cases', function (Blueprint $table) {
             $table->id();
-            $table->string('number_office')->nullable();
+            $table->integer('number_office')->nullable();
             $table->string('number_institution')->nullable();
             $table->string('prosecutor')->nullable();
             $table->string('defendants')->nullable();

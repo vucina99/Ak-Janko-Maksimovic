@@ -5,6 +5,8 @@
                 <div class="row">
                     <div class="col-lg-4 col-sm-12">
                         <div class="choose-type">
+                            <vue-confirm-dialog></vue-confirm-dialog>
+
                             <show-trial :date_selected="date_selected"></show-trial>
                             <edit-trial :date_selected="date_selected"  :institutions_serchData="institutionsSerchData"></edit-trial>
                             <div class="container">
@@ -126,9 +128,9 @@
                                 <tr v-for="(trial, index) in allTrial">
                                     <td @click.prevent="changeVisit(trial.id)">
 
-                                        <i class="fa fa-circle text-success" v-if="trial.isFinished "
+                                        <i class="fa fa-circle text-success" v-if="trial.isFinished == 1 "
                                            aria-hidden="true"></i>
-                                        <i class="fa fa-circle text-danger" v-if="!trial.isFinished"
+                                        <i class="fa fa-circle text-danger" v-if="trial.isFinished == 0"
                                            aria-hidden="true"></i>
                                     </td>
                                     <td @click.prevent="modalShowTrial(trial)">
@@ -292,11 +294,46 @@ export default {
         },
 
         changeVisit(id){
-            axios.post('/trial/change-visit' , {id}).then(({data}) => {
-                this.getTrials();
-            }).catch((error) => {
-                alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
+
+
+            this.$confirm({
+                message: 'DA LI STE SIGURNI DA ŽELITE DA IZMENITE AKTIVNOST?',
+                button: {
+                    no: 'NE',
+                    yes: 'DA'
+                },
+                /**
+                 * Callback Function
+                 * @param {Boolean} confirm
+                 */
+                callback: confirm => {
+                    if (confirm) {
+                        axios.post('/trial/change-visit' , {id}).then(({data}) => {
+
+                            this.getTrials();
+                            this.$confirm({
+                                message: 'USPEŠNO STE IZMENILI AKTIVNOST',
+                                button: {
+                                    yes: 'OK'
+                                },
+                                /**
+                                 * Callback Function
+                                 * @param {Boolean} confirm
+                                 */
+                                callback: confirm => {
+                                    if (confirm) {
+                                    }
+                                }
+                            })
+
+
+                        }).catch((error) => {
+                            alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
+                        })
+                    }
+                }
             })
+
         }
     },
     created() {

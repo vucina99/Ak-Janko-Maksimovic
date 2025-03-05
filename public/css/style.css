@@ -173,6 +173,10 @@ footer p{
     width: 100%;
     cursor: pointer;
 }
+.type-div-size-client:first-child{
+    width: 50%;
+    cursor: pointer;
+}
 .type-div-size:hover{
     /*width: 100%;*/
     /*background-color: rgba(0,51,102,255);*/

@@ -51,7 +51,8 @@ class CaseResourceVanduski extends JsonResource
             'expert_costs' => $this->expert_costs,
             'lawsuit' => $this->lawsuit,
             'note' => $this->note,
-            'vansudski_number' => $this->vansudski_number
+            'vansudski_number' => $this->vansudski_number,
+            'createdAt' => $this->created_at
         ];
     }
 }

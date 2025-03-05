@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             CaseTypeSeeder::class,
             InstitutionTypeSeeder::class,
             UserSeeder::class,
-            RoleSeeder::class
+            RoleSeeder::class,
+            FolderSeeder::class
         ]);
     }
 }

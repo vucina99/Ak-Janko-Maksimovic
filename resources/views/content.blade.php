@@ -67,6 +67,11 @@
                                     ZAPOSLENI
                                 </a>
                             </li>
+                            <li class="nav-item color-blue ml-1 ">
+                                <a class="nav-link  active color-blue " href="/admin/folders">
+                                    FOLDERI
+                                </a>
+                            </li>
                         @endif
                         <li class="nav-item color-blue ml-1 ">
                             <a class="nav-link  active color-blue logout" href="/">

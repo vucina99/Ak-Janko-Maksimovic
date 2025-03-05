@@ -26,6 +26,9 @@ Vue.component('calendar', require('./components/trial/Calendar.vue').default);
 Vue.component('date-results', require('./components/trial/DateResults.vue').default);
 Vue.component('staff', require('./components/admin/Staff.vue').default);
 Vue.component('institutions', require('./components/admin/Institutions.vue').default);
+Vue.component('folders', require('./components/admin/Folders.vue').default);
+Vue.component('client-files', require('./components/client/ClientFiles.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

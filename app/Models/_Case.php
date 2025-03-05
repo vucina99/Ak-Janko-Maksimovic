@@ -40,7 +40,8 @@ class _Case extends Model
         'at',
         'lawsuit',
         'note',
-        'vansudski_number'
+        'vansudski_number',
+        'created_at'
     ];
 
     public function institution()

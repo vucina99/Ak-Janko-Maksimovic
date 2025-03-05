@@ -66,6 +66,41 @@
                                     </div>
                                 </div>
 
+                                <div class="col-lg-4 col-md-8-col">
+                                    <div class="form-group search-font-size">
+                                        <label for="number_office">BROJ ŠTETE</label>
+                                        <input type="text" name="damage_number" id="damage_number"
+                                               v-model="search.damageNumber" class="form-control"
+                                               placeholder="BROJ ŠTETE">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-8-col">
+                                    <div class="form-group search-font-size">
+                                        <label for="number_office">TUŽBA</label>
+                                        <input type="text" name="lawsuit" id="lawsuit"
+                                               v-model="search.lawsuit" class="form-control"
+                                               placeholder="TUŽBA">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-8-col">
+                                    <div class="form-group search-font-size">
+                                        <label for="number_office">NAPOMENA</label>
+                                        <input type="text" name="lawsuit" id="lawsuit"
+                                               v-model="search.description" class="form-control"
+                                               placeholder="NAPOMENA">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-8-col">
+                                    <div class="form-group search-font-size">
+                                        <label for="number_office">AT</label>
+                                        <input type="text" name="at" id="at"
+                                               v-model="search.at" class="form-control"
+                                               placeholder="AT">
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="pt-3 pr-1 pl-1 pb-3">
                                 <div class="w-100 d-flex justify-content-between">
@@ -367,6 +402,10 @@ export default {
                 datumSlikanjaDo: '',
                 datumSlikanjaOdOriginal: '',
                 datumSlikanjaDoOriginal: '',
+                damageNumber: '',
+                lawsuit: '',
+                description: '',
+                at: '',
             },
             maxCount: 0,
             page: 0,
@@ -562,6 +601,10 @@ export default {
                 datumSlikanjaDo: '',
                 datumSlikanjaOdOriginal: '',
                 datumSlikanjaDoOriginal: '',
+                damageNumber: '',
+                lawsuit: '',
+                description: '',
+                at: '',
             };
         },
 
@@ -652,7 +695,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .sticky-thead th {
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 2;
     background: #003366;
 }
 </style>

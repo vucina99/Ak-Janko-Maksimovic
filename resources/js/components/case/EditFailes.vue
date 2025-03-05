@@ -52,6 +52,22 @@
                                                                id="inputGroupFile">
                                                     </div>
                                                 </div>
+                                                <div class="pb-3" v-if="is_admin == 2">
+                                                    <div class="form-group search-font-size ">
+                                                        <label id="folder">FOLDER</label>
+                                                        <v-select
+                                                            :options="folders"
+                                                            id="folder"
+                                                            name="folder"
+                                                            label="name"
+                                                            placeholder="FOLDER"
+                                                            v-model="folderID"
+                                                            :reduce="folder => folder.id">
+
+                                                        </v-select>
+
+                                                    </div>
+                                                </div>
                                                 <div class="pb-1 pt-4" v-if="is_admin == 2">
                                                     <button class="btn btn-primary w-100" @click.prevent="editCase()">
                                                         DODAJ FAJLOVE &nbsp; <i
@@ -60,8 +76,9 @@
                                                 </div>
 
                                                 <br><br>
+                                                <button  type="button" class="btn btn-dark mt-4 btn-sm" @click="copyLinkFiles()">KOPIRAJ LINK <i class="fa-solid fa-link"></i></button>
                                                 <table
-                                                    class="table mt-4  table-hover table-text-size table-cursor border-right-black">
+                                                    class="table mt-1  table-hover table-text-size table-cursor border-right-black">
                                                     <thead class="bg-blue text-personal-light">
                                                     <tr>
                                                         <th>IME FAJLA</th>
@@ -141,6 +158,8 @@ export default {
             fileData: [],
             caseIndex: -1,
             success: false,
+            folders:[],
+            folderID:"",
             customToolbar: [
                 [{header: [false, 1, 2, 3, 4, 5, 6]}],
                 ["bold", "italic", "underline", "strike"],
@@ -188,7 +207,8 @@ export default {
             this.success = false;
 
             const formData = new FormData();
-            formData.append('caseID', this.caseID); // Dodaj caseID u formu
+            formData.append('caseID', this.caseID);
+            formData.append('folderID', this.folderID);
             for (var i = 0; i < this.$refs.file.files.length; i++) {
                 let file = this.$refs.file.files[i];
                 formData.append('files[' + i + ']', file);
@@ -210,6 +230,21 @@ export default {
             });
 
 
+        },
+        getFolders() {
+            axios.get('/admin/get/folders').then(({data}) => {
+                this.folders = data
+                console.log(this.folders);
+            })
+        },
+        copyLinkFiles(){
+            try {
+                let link = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}` + `/case/get/files/folders/${this.caseData.id}/${this.caseData.createdAt}`;
+                 navigator.clipboard.writeText(link);
+               return;
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
         },
         removeFile(fileId, index) {
             if (this.is_admin == 1) return false;
@@ -261,8 +296,6 @@ export default {
                 this.caseData = data.case
                 this.caseData['case_type_id'] = this.type
                 this.fileData = data.caseFiles
-                console.log(data)
-                console.log( this.fileData )
                 this.loader = false;
             }).catch((error) => {
                 alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora')
@@ -274,6 +307,7 @@ export default {
             this.loader = true;
             this.success = false;
             this.getCase();
+            this.getFolders();
         },
         closeModal() {
             this.$modal.hide('edit-files-modal');

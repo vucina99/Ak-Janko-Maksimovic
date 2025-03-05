@@ -5319,6 +5319,128 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue_simple_spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-simple-spinner */ "./node_modules/vue-simple-spinner/dist/vue-simple-spinner.js");
+/* harmony import */ var vue_simple_spinner__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_simple_spinner__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "Folders",
+  components: {
+    Spinner: (vue_simple_spinner__WEBPACK_IMPORTED_MODULE_0___default())
+  },
+  data: function data() {
+    return {
+      folders: null,
+      success: false,
+      folderName: ""
+    };
+  },
+  methods: {
+    // createUser() {
+    //     axios.post('/admin/create/staff', this.user).then(({data}) => {
+    //         this.success = true
+    //         this.errorData = {}
+    //         this.error = false
+    //         this.users.push(data);
+    //         this.user = {
+    //             ime: '',
+    //             email: '',
+    //             lozinka: '',
+    //             role: 1,
+    //         }
+    //
+    //     }).catch((error) => {
+    //         if (error.response.status == 400) {
+    //             this.errorData = error.response.data.original
+    //             this.success = false
+    //             this.error = false
+    //         } else {
+    //             this.error = true
+    //             this.success = false
+    //         }
+    //     });
+    // },
+    addFolder: function addFolder() {
+      var _this = this;
+      if (this.folderName.trim() == '') {
+        this.success = false;
+        return;
+      }
+      var similarValue = false;
+      this.folders.forEach(function (data) {
+        if (data.name.toUpperCase() == _this.folderName.trim().toUpperCase()) {
+          similarValue = true;
+        }
+      });
+      if (similarValue) {
+        return;
+      }
+      axios.post('/admin/create/folder', {
+        folderName: this.folderName
+      }).then(function (_ref) {
+        var data = _ref.data;
+        _this.success = true;
+        _this.folderName = "";
+        _this.getFolders();
+      })["catch"](function (error) {
+        _this.success = false;
+        alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE');
+      });
+    },
+    getFolders: function getFolders() {
+      var _this2 = this;
+      this.folders = null;
+      axios.get('/admin/get/folders').then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.folders = data;
+      });
+    },
+    deleteFolder: function deleteFolder(folder) {
+      var _this3 = this;
+      if (folder.name.toUpperCase() == "SVI FAJLOVI") {
+        alert("Ne smete obrisati ovaj folder");
+        return;
+      }
+      this.$confirm({
+        message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE FOLDER?',
+        button: {
+          no: 'NE',
+          yes: 'DA'
+        },
+        /**
+         * Callback Function
+         * @param {Boolean} confirm
+         */
+        callback: function callback(confirm) {
+          if (confirm) {
+            axios["delete"]('/admin/delete/folder/' + folder.id).then(function (_ref3) {
+              var data = _ref3.data;
+              _this3.getFolders();
+            })["catch"](function (error) {
+              alert('POKUŠAJTE POSLE, DOŠLO JE DO GREŠKE');
+            });
+          }
+        }
+      });
+    }
+  },
+  created: function created() {
+    this.getFolders();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Institutions.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Institutions.vue?vue&type=script&lang=js& ***!
@@ -5978,6 +6100,8 @@ __webpack_require__.r(__webpack_exports__);
       fileData: [],
       caseIndex: -1,
       success: false,
+      folders: [],
+      folderID: "",
       customToolbar: [[{
         header: [false, 1, 2, 3, 4, 5, 6]
       }], ["bold", "italic", "underline", "strike"], [{
@@ -6033,7 +6157,8 @@ __webpack_require__.r(__webpack_exports__);
       this.loader = true;
       this.success = false;
       var formData = new FormData();
-      formData.append('caseID', this.caseID); // Dodaj caseID u formu
+      formData.append('caseID', this.caseID);
+      formData.append('folderID', this.folderID);
       for (var i = 0; i < this.$refs.file.files.length; i++) {
         var file = this.$refs.file.files[i];
         formData.append('files[' + i + ']', file);
@@ -6051,8 +6176,25 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    removeFile: function removeFile(fileId, index) {
+    getFolders: function getFolders() {
       var _this3 = this;
+      axios.get('/admin/get/folders').then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.folders = data;
+        console.log(_this3.folders);
+      });
+    },
+    copyLinkFiles: function copyLinkFiles() {
+      try {
+        var link = "".concat(window.location.protocol, "//").concat(window.location.hostname).concat(window.location.port ? ':' + window.location.port : '') + "/case/get/files/folders/".concat(this.caseData.id, "/").concat(this.caseData.createdAt);
+        navigator.clipboard.writeText(link);
+        return;
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    },
+    removeFile: function removeFile(fileId, index) {
+      var _this4 = this;
       if (this.is_admin == 1) return false;
       this.$confirm({
         message: 'DA LI STE SIGURNI DA ŽELITE DA OBRIŠETE FAJL?',
@@ -6066,15 +6208,15 @@ __webpack_require__.r(__webpack_exports__);
          */
         callback: function callback(confirm) {
           if (confirm) {
-            _this3.loader = true;
-            axios["delete"]('/case/remove/file/' + fileId).then(function (_ref3) {
-              var data = _ref3.data;
-              var filter = _this3.fileData.filter(function (value, key) {
+            _this4.loader = true;
+            axios["delete"]('/case/remove/file/' + fileId).then(function (_ref4) {
+              var data = _ref4.data;
+              var filter = _this4.fileData.filter(function (value, key) {
                 return key !== index;
               });
-              _this3.fileData = filter;
-              _this3.loader = false;
-              _this3.$confirm({
+              _this4.fileData = filter;
+              _this4.loader = false;
+              _this4.$confirm({
                 message: 'USPEŠNO BRISANJE',
                 button: {
                   yes: 'OK'
@@ -6095,15 +6237,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getCase: function getCase() {
-      var _this4 = this;
-      axios.get('/case/get/case/' + this.caseID).then(function (_ref4) {
-        var data = _ref4.data;
-        _this4.caseData = data["case"];
-        _this4.caseData['case_type_id'] = _this4.type;
-        _this4.fileData = data.caseFiles;
-        console.log(data);
-        console.log(_this4.fileData);
-        _this4.loader = false;
+      var _this5 = this;
+      axios.get('/case/get/case/' + this.caseID).then(function (_ref5) {
+        var data = _ref5.data;
+        _this5.caseData = data["case"];
+        _this5.caseData['case_type_id'] = _this5.type;
+        _this5.fileData = data.caseFiles;
+        _this5.loader = false;
       })["catch"](function (error) {
         alert('Došlo je do greške, probajte ponovo ili kontaktirajte administratora');
       });
@@ -6114,6 +6254,7 @@ __webpack_require__.r(__webpack_exports__);
       this.loader = true;
       this.success = false;
       this.getCase();
+      this.getFolders();
     },
     closeModal: function closeModal() {
       this.$modal.hide('edit-files-modal');
@@ -6382,7 +6523,11 @@ __webpack_require__.r(__webpack_exports__);
         datumSlikanjaOd: '',
         datumSlikanjaDo: '',
         datumSlikanjaOdOriginal: '',
-        datumSlikanjaDoOriginal: ''
+        datumSlikanjaDoOriginal: '',
+        damageNumber: '',
+        lawsuit: '',
+        description: '',
+        at: ''
       },
       maxCount: 0,
       page: 0,
@@ -6581,7 +6726,11 @@ __webpack_require__.r(__webpack_exports__);
         datumSlikanjaOd: '',
         datumSlikanjaDo: '',
         datumSlikanjaOdOriginal: '',
-        datumSlikanjaDoOriginal: ''
+        datumSlikanjaDoOriginal: '',
+        damageNumber: '',
+        lawsuit: '',
+        description: '',
+        at: ''
       };
     },
     /**
@@ -6686,6 +6835,54 @@ __webpack_require__.r(__webpack_exports__);
       this.getCase();
       this.loader = true;
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "ClientFiles",
+  props: ['folders', 'files', 'case'],
+  data: function data() {
+    return {
+      selectedFolder: 1,
+      allFiles: [],
+      loader: false
+    };
+  },
+  methods: {
+    clickFolder: function clickFolder() {
+      var _this = this;
+      this.allFiles = [];
+      this.loader = true;
+      axios.get("/case/get/files/".concat(this.selectedFolder, "/").concat(this["case"].id)).then(function (_ref) {
+        var data = _ref.data;
+        _this.allFiles = data;
+        _this.loader = false;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+    this.folders.forEach(function (folder) {
+      if (folder.name.toUpperCase() == "SVI FAJLOVI") {
+        _this2.selectedFolder = folder.id;
+      }
+    });
+    this.allFiles = this.files;
   }
 });
 
@@ -7327,6 +7524,171 @@ var staticRenderFns = [function () {
   }, [_vm._v("Example Component")]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_vm._v("\n                    I'm an example component.\n                ")])])])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("br"), _c("br"), _vm._v(" "), _c("vue-confirm-dialog"), _vm._v(" "), _c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-4 col-sm-12"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "w-100 bg-personal-light"
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-lg-12 col-md-12 col-sm-12 pt-3 pb-3"
+  }, [_vm.success ? _c("div", {
+    staticClass: "alert error-danger alert-success alert-dismissible fade show",
+    attrs: {
+      role: "alert"
+    }
+  }, [_vm._m(1), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        _vm.success = false;
+      }
+    }
+  }, [_c("span", [_vm._v("×")])])]) : _vm._e(), _vm._v(" "), _c("form", {
+    attrs: {
+      action: ""
+    }
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "name"
+    }
+  }, [_vm._v("NAZIV FOLDERA")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.folderName,
+      expression: "folderName"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "name",
+      id: "name",
+      placeholder: "NAZIV FOLDERA"
+    },
+    domProps: {
+      value: _vm.folderName
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.folderName = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "pt-2"
+  }, [_c("button", {
+    staticClass: "btn btn-success w-100",
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.addFolder();
+      }
+    }
+  }, [_vm._v("\n                                            DODAJ "), _c("i", {
+    staticClass: "fa fa-plus",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-8 col-sm-12"
+  }, [_c("table", {
+    staticClass: "table table-hover table-text-size table-cursor"
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", [_vm._l(_vm.folders, function (folder, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(folder.name))]), _vm._v(" "), _c("td", {
+      on: {
+        click: function click($event) {
+          return _vm.deleteFolder(folder);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash text-danger",
+      attrs: {
+        "aria-hidden": "true"
+      }
+    })])]);
+  }), _vm._v(" "), _vm.folders != null && _vm.folders.length < 1 ? _c("tr", {
+    staticClass: "bg-light"
+  }, [_vm._m(3)]) : _vm._e(), _vm._v(" "), _vm.folders == null ? _c("tr", {
+    staticClass: "bg-light"
+  }, [_c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "2"
+    }
+  }, [_c("vue-simple-spinner")], 1)]) : _vm._e()], 2)])])])])], 1);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "choose-type"
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "type-div-size type-div-size-back bg-blue text-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full"
+  }, [_c("span", [_vm._v("DODAJ FOLDER")])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("span", [_c("i", {
+    staticClass: "fa fa-check-square",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }), _vm._v("   FOLDER JE USPEŠNO DODAT")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", {
+    staticClass: "bg-blue text-personal-light"
+  }, [_c("tr", [_c("th", [_vm._v("NAZIV FOLDERA")]), _vm._v(" "), _c("th", [_vm._v("AKCIJA")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticClass: "text-center",
+    attrs: {
+      colspan: "2"
+    }
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]);
 }];
 render._withStripped = true;
 
@@ -9033,6 +9395,32 @@ var render = function render() {
       id: "inputGroupFile"
     }
   })])]) : _vm._e(), _vm._v(" "), _vm.is_admin == 2 ? _c("div", {
+    staticClass: "pb-3"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      id: "folder"
+    }
+  }, [_vm._v("FOLDER")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.folders,
+      id: "folder",
+      name: "folder",
+      label: "name",
+      placeholder: "FOLDER",
+      reduce: function reduce(folder) {
+        return folder.id;
+      }
+    },
+    model: {
+      value: _vm.folderID,
+      callback: function callback($$v) {
+        _vm.folderID = $$v;
+      },
+      expression: "folderID"
+    }
+  })], 1)]) : _vm._e(), _vm._v(" "), _vm.is_admin == 2 ? _c("div", {
     staticClass: "pb-1 pt-4"
   }, [_c("button", {
     staticClass: "btn btn-primary w-100",
@@ -9047,8 +9435,20 @@ var render = function render() {
     attrs: {
       "aria-hidden": "true"
     }
-  })])]) : _vm._e(), _vm._v(" "), _c("br"), _c("br"), _vm._v(" "), _c("table", {
-    staticClass: "table mt-4 table-hover table-text-size table-cursor border-right-black"
+  })])]) : _vm._e(), _vm._v(" "), _c("br"), _c("br"), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-dark mt-4 btn-sm",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.copyLinkFiles();
+      }
+    }
+  }, [_vm._v("KOPIRAJ LINK "), _c("i", {
+    staticClass: "fa-solid fa-link"
+  })]), _vm._v(" "), _c("table", {
+    staticClass: "table mt-1 table-hover table-text-size table-cursor border-right-black"
   }, [_c("thead", {
     staticClass: "bg-blue text-personal-light"
   }, [_c("tr", [_c("th", [_vm._v("IME FAJLA")]), _vm._v(" "), _c("th", [_vm._v("DATUM")]), _vm._v(" "), _c("th", [_vm._v("FAJL")]), _vm._v(" "), _c("th", [_vm._v("OBRIŠI")])])]), _vm._v(" "), _c("tbody", [_vm._l(_vm.fileData, function (file, key) {
@@ -9871,7 +10271,131 @@ var render = function render() {
       },
       expression: "search.datumSlikanjaDo"
     }
-  })], 1)])]), _vm._v(" "), _c("div", {
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("BROJ ŠTETE")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.damageNumber,
+      expression: "search.damageNumber"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "damage_number",
+      id: "damage_number",
+      placeholder: "BROJ ŠTETE"
+    },
+    domProps: {
+      value: _vm.search.damageNumber
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "damageNumber", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("TUŽBA")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.lawsuit,
+      expression: "search.lawsuit"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "lawsuit",
+      id: "lawsuit",
+      placeholder: "TUŽBA"
+    },
+    domProps: {
+      value: _vm.search.lawsuit
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "lawsuit", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("NAPOMENA")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.description,
+      expression: "search.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "lawsuit",
+      id: "lawsuit",
+      placeholder: "NAPOMENA"
+    },
+    domProps: {
+      value: _vm.search.description
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "description", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-8-col"
+  }, [_c("div", {
+    staticClass: "form-group search-font-size"
+  }, [_c("label", {
+    attrs: {
+      "for": "number_office"
+    }
+  }, [_vm._v("AT")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.search.at,
+      expression: "search.at"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "at",
+      id: "at",
+      placeholder: "AT"
+    },
+    domProps: {
+      value: _vm.search.at
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.search, "at", $event.target.value);
+      }
+    }
+  })])])]), _vm._v(" "), _c("div", {
     staticClass: "pt-3 pr-1 pl-1 pb-3"
   }, [_c("div", {
     staticClass: "w-100 d-flex justify-content-between"
@@ -11252,6 +11776,93 @@ var render = function render() {
   }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e()], 2)])]) : _vm._e()])]), _vm._v(" "), _c("br")])])])])])]), _vm._v(" "), _c("br"), _c("br")])], 1);
 };
 var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "options-first options-first-lg"
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-4 col-sm-12 pb-5"
+  }, [_c("div", {
+    staticClass: "choose-type"
+  }, [_c("div", {
+    staticClass: "container"
+  }, [_c("div", {
+    staticClass: "row"
+  }, _vm._l(_vm.folders, function (folder, index) {
+    return _c("div", {
+      "class": ["type-div-size type-div-size-client w-100 bg-personal-light pt-2 pb-2 d-flex align-items-center justify-content-center border-light-full", folder.id == _vm.selectedFolder ? "bg-blue text-light" : ""],
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          _vm.selectedFolder = folder.id;
+          _vm.clickFolder();
+        }
+      }
+    }, [_c("span", [_vm._v(_vm._s(folder.name.toUpperCase()))])]);
+  }), 0)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-8 col-sm-12"
+  }, [_c("table", {
+    staticClass: "table table-hover table-text-size table-cursor border-right-black"
+  }, [_vm._m(0), _vm._v(" "), _c("tbody", [_vm._l(_vm.allFiles, function (file, key) {
+    return _c("tr", {
+      key: key,
+      staticClass: "bg-white"
+    }, [_c("td", {
+      staticClass: "pb-0"
+    }, [_vm._v("\n                            " + _vm._s(file.path) + "\n                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(file.date))]), _vm._v(" "), _c("td", [_c("a", {
+      attrs: {
+        href: file.name,
+        download: "",
+        target: "_blank",
+        rel: "noopener noreferrer"
+      }
+    }, [_c("i", {
+      staticClass: "fa text-dark fa-file-text file-small-text",
+      attrs: {
+        "aria-hidden": "true"
+      }
+    })])])]);
+  }), _vm._v(" "), _vm.allFiles.length < 1 && _vm.loader == false ? _c("td", {
+    staticClass: "text-center bg-light",
+    attrs: {
+      colspan: "3"
+    }
+  }, [_c("span", [_vm._v("NEMA PODATAKA ZA PRIKAZ")])]) : _vm._e(), _vm._v(" "), _vm.loader == true ? _c("td", {
+    staticClass: "text-center bg-light",
+    attrs: {
+      colspan: "3"
+    }
+  }, [_c("vue-simple-spinner")], 1) : _vm._e()], 2)])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", {
+    staticClass: "bg-blue text-personal-light"
+  }, [_c("tr", [_c("th", [_vm._v("IME FAJLA")]), _vm._v(" "), _c("th", [_vm._v("DATUM")]), _vm._v(" "), _c("th", [_vm._v("FAJL")])])]);
+}];
 render._withStripped = true;
 
 
@@ -12902,6 +13513,9 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('calendar', (__webpack_req
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('date-results', (__webpack_require__(/*! ./components/trial/DateResults.vue */ "./resources/js/components/trial/DateResults.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('staff', (__webpack_require__(/*! ./components/admin/Staff.vue */ "./resources/js/components/admin/Staff.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('institutions', (__webpack_require__(/*! ./components/admin/Institutions.vue */ "./resources/js/components/admin/Institutions.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('folders', (__webpack_require__(/*! ./components/admin/Folders.vue */ "./resources/js/components/admin/Folders.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('client-files', (__webpack_require__(/*! ./components/client/ClientFiles.vue */ "./resources/js/components/client/ClientFiles.vue")["default"]));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -20490,7 +21104,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-client:first-child{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -20616,7 +21230,7 @@ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBP
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_2__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntbody td input[data-v-6c30b84e] {\n    width: 100%;\n    border: none;\n    outline: none;\n    background: transparent;\n    padding: 0;\n}\n.table-responsive[data-v-6c30b84e] {\n    overflow-x: auto;\n}\n.table th[data-v-6c30b84e] {\n    white-space: nowrap;\n    text-align: center;\n}\n.table th[data-v-6c30b84e], td[data-v-6c30b84e] {\n    min-width: 20px;\n    max-width: 300px;\n}\n.table td[data-v-6c30b84e] {\n    border: 0.5px solid #cce6ff !important;\n}\n.table[data-v-6c30b84e] {\n    width: 100%; /* Tabela zauzima punu širinu */\n}\ninput[type=\"date\"][data-v-6c30b84e]::-webkit-calendar-picker-indicator {\n    font-size: 20px; /* Povećavanje */\n    width: 18px;\n    height: 18px;\n    cursor: pointer;\n}\n.first_last_name[data-v-6c30b84e] {\n    min-width: 230px;\n    max-width: 1700px;\n    white-space: nowrap;\n}\n.not[data-v-6c30b84e] {\n    min-width: 400px;\n    max-width: 1700px;\n    white-space: pre-wrap;\n}\n.table-wrapper[data-v-6c30b84e] {\n    /* Podesi visinu po potrebi */\n    max-height: 80vh;\n    overflow-y: auto; /* Vertikalni scroll */\n    overflow-x: auto; /* Horizontalni scroll, po potrebi */\n    position: relative;\n}\n.sticky-thead th[data-v-6c30b84e] {\n    position: sticky;\n    top: 0;\n    z-index: 999;\n    background: #003366;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntbody td input[data-v-6c30b84e] {\n    width: 100%;\n    border: none;\n    outline: none;\n    background: transparent;\n    padding: 0;\n}\n.table-responsive[data-v-6c30b84e] {\n    overflow-x: auto;\n}\n.table th[data-v-6c30b84e] {\n    white-space: nowrap;\n    text-align: center;\n}\n.table th[data-v-6c30b84e], td[data-v-6c30b84e] {\n    min-width: 20px;\n    max-width: 300px;\n}\n.table td[data-v-6c30b84e] {\n    border: 0.5px solid #cce6ff !important;\n}\n.table[data-v-6c30b84e] {\n    width: 100%; /* Tabela zauzima punu širinu */\n}\ninput[type=\"date\"][data-v-6c30b84e]::-webkit-calendar-picker-indicator {\n    font-size: 20px; /* Povećavanje */\n    width: 18px;\n    height: 18px;\n    cursor: pointer;\n}\n.first_last_name[data-v-6c30b84e] {\n    min-width: 230px;\n    max-width: 1700px;\n    white-space: nowrap;\n}\n.not[data-v-6c30b84e] {\n    min-width: 400px;\n    max-width: 1700px;\n    white-space: pre-wrap;\n}\n.table-wrapper[data-v-6c30b84e] {\n    /* Podesi visinu po potrebi */\n    max-height: 80vh;\n    overflow-y: auto; /* Vertikalni scroll */\n    overflow-x: auto; /* Horizontalni scroll, po potrebi */\n    position: relative;\n}\n.sticky-thead th[data-v-6c30b84e] {\n    position: sticky;\n    top: 0;\n    z-index: 2;\n    background: #003366;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -20772,7 +21386,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "*{\r\n    margin:0px;\r\n    padding: 0px;\r\n}\r\nbody{\r\n    font-family: 'Open Sans', sans-serif;\r\n}\r\n.color-blue{\r\n    color: rgba(0,51,102,255);\r\n}\r\n.bg-personal-light{\r\n    background-color: #f2f2f2\r\n}\r\n\r\n.text-personal-light{\r\n    color: #f2f2f2\r\n}\r\n.bg-blue{\r\n    background-color: rgba(0,51,102,255);\r\n}\r\n.border-blue{\r\n    border-bottom: 0.5px solid rgba(0,51,102,255);\r\n}\r\n.border-blue-full{\r\n    border: 0.5px solid rgba(0,51,102,255);\r\n}\r\n\r\n.border-light-full{\r\n    border: 1px solid #ffffff;\r\n}\r\n.nav-link{\r\n    font-size: 13px;\r\n}\r\n#gotovac-logo{\r\n    width: 160px;\r\n}\r\n.navbar-toggler-icon i {\r\n    font-size: 31px;\r\n}\r\n\r\n.navbar-toggler:focus {\r\n    outline : none;\r\n}\r\nmain {\r\n    min-height: 92vh\r\n}\r\nfooter {\r\n    background-color: rgba(0,51,102,255);\r\n    border-top: 0.5px solid #ffffff;\r\n\r\n}\r\nfooter p{\r\n    font-size: 13px;\r\n}\r\n.setHeight{\r\n    min-height: 92vh;\r\n}\r\n.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    border-color: rgba(0,51,102,255) !important ;\r\n}\r\n.withoutStricke{\r\n    text-decoration: none !important;\r\n}\r\n.small-text{\r\n    font-size: 13px;\r\n}\r\n.file-small-text{\r\n    font-size: 18px !important;\r\n}\r\n.down-margin{\r\n    margin-top:6.8px;\r\n}\r\n\r\n.border-blue button {\r\n    font-size: 13.5px;\r\n}\r\n.border-blue label {\r\n    font-size: 14px;\r\n}\r\n.options{\r\n    padding: 150px 0px ;\r\n    background-color: rgba(0,51,102,255);\r\n    color:#f2f2f2 ;\r\n    transition: 0.8s ease;\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.options:hover{\r\n    background-color:#f2f2f2 ;\r\n    color:rgba(0,51,102,255) ;\r\n    border: 1px solid rgba(0,51,102,255);\r\n    transition: 1s ease;\r\n}\r\n\r\n.table-text-size tr th{\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.table-text-size tr td{\r\n    border-right: 1px solid #f2f2f2 !important;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n}\r\n.search-font-size label{\r\n    font-size: 11px;\r\n    margin-left: 12px;\r\n}\r\n.search-font-size input{\r\n    font-size: 12px !important;\r\n}\r\n.type{\r\n    font-size: 11px !important;\r\n}\r\n.search-font-size ::placeholder{\r\n    font-size: 11px;\r\n}\r\n\r\n.add-form-modal ::placeholder {\r\n    font-size: 12px;\r\n}\r\n.add-form-modal label{\r\n    font-size: 12px;\r\n    margin-left: 12px;\r\n}\r\n.add-form-modal input{\r\n    font-size: 12px ;\r\n}\r\n.search-font-size-modal label{\r\n    font-size: 12px;\r\n}\r\n.search-font-size-modal input{\r\n    font-size: 12px !important;\r\n}\r\n.search-font-size-modal ::placeholder{\r\n    font-size: 12px;\r\n}\r\n.activation{ overflow: auto; }\r\n.vs__search{\r\n    padding:0.1rem  0.75rem !important;\r\n}\r\n\r\n.vs__dropdown-menu{\r\n    font-size: 12px !important;\r\n    border-top:  1.5px solid #f2f2f2 !important;\r\n}\r\n.vs__dropdown-menu li {\r\n   padding:4.5px 0px 4.5px 12px !important;\r\n}\r\n\r\n\r\n.vs__selected{\r\n    font-size: 12px !important;\r\n    padding-left: 7.5px !important;\r\n}\r\n.choose a{\r\n    text-decoration: none;\r\n}\r\n.table-cursor td{\r\n    cursor: pointer;\r\n}\r\n.table-cursor th{\r\n    cursor: default;\r\n}\r\n.fa-arrow-circle-o-right{\r\n    font-size: 15px;\r\n}\r\n.type-div-size{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-client:first-child{\r\n    width: 50%;\r\n    cursor: pointer;\r\n}\r\n.type-div-size:hover{\r\n    /*width: 100%;*/\r\n    /*background-color: rgba(0,51,102,255);*/\r\n    /*color: #ffffff;*/\r\n}\r\n\r\n.type-div-size span{\r\n    font-size: 13px;\r\n}\r\n.vm--modal {\r\n    height: auto !important;\r\n    overflow-x: auto;\r\n}\r\n.ql-editor p {\r\n    font-style: normal;\r\n    font-size: 12px;\r\n}\r\n.ql-editor , .ql-toolbar  {\r\n    background-color: #ffffff;\r\n}\r\n.fa-times{\r\n    cursor: pointer;\r\n}\r\n.vs__no-options{\r\n    color: #ffffff !important;\r\n}\r\n.mx-datepicker{\r\n    width: 100% !important;\r\n}\r\n.mx-calendar , .mx-calendar-panel-date{\r\n    width: 310px !important;\r\n}\r\n.mx-table-date div{\r\n    font-size: 14px !important;\r\n}\r\n.mx-input{\r\n    padding: .375rem .75rem !important;\r\n}\r\n.bg-white{\r\n   background-color: #ffffff;\r\n}\r\n.border-right-black tr td{\r\n    border-right: 2px solid #f2f2f2 !important;\r\n}\r\n.fc-header-toolbar , .fc-toolbar {\r\n    background-color:rgba(0,51,102,255) !important;\r\n    padding: 0px !important;\r\n    margin: 0px !important\r\n}\r\n.fc-col-header .fc-scrollgrid-sync-inner{\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n    padding: 11px 0px;\r\n}\r\n.fc .fc-daygrid-day.fc-day-today {\r\n    background-color: #f2f2f2 !important;\r\n    text-transform: uppercase;\r\n}\r\n.fc-toolbar-title{\r\n    color: #ffffff !important;\r\n    padding: 10px 0px;\r\n    padding-left: 10px;\r\n    text-transform: uppercase;\r\n}\r\n.fc-button , .fc-button-primary{\r\n    background-color: #f2f2f2 !important;\r\n    color: rgba(0,51,102,255) !important;\r\n    text-transform: uppercase !important;\r\n\r\n}\r\n.fc-col-header-cell-cushion{\r\n    text-transform: uppercase !important;\r\n}\r\n.fc-scrollgrid-sync-table .fc-scrollgrid-sync-inner:hover{\r\n    background-color: #bfbfbf !important;\r\n    color: #ffffff !important;\r\n    cursor: pointer;\r\n}\r\n.type-div-size-back{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.type-div-size-back:first-child{\r\n    width: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n\r\n\r\n.type-div-size-back span{\r\n    font-size: 14px !important;\r\n}\r\n.error-danger{\r\n    text-transform: uppercase;\r\n    font-size:11px;\r\n}\r\n.page-item .number  {\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item.active .number  {\r\n    background-color: rgba(0,51,102,255) !important;\r\n    color: #ffffff !important;\r\n}\r\n\r\n.page-item:first-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item:last-child .one{\r\n    color: rgba(0,51,102,255) !important;\r\n}\r\n.page-item .page-link{\r\n    padding: 0.7rem 0.85rem;\r\n}\r\n\r\n\r\n.paginationScroll {\r\n    overflow-x: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -74193,6 +74807,45 @@ component.options.__file = "resources/js/components/ExampleComponent.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/Folders.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/admin/Folders.vue ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Folders.vue?vue&type=template&id=2ac927ac&scoped=true& */ "./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true&");
+/* harmony import */ var _Folders_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Folders.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/Folders.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Folders_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "2ac927ac",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/Folders.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/Institutions.vue":
 /*!********************************************************!*\
   !*** ./resources/js/components/admin/Institutions.vue ***!
@@ -74521,6 +75174,45 @@ component.options.__file = "resources/js/components/case/ShowCase.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/client/ClientFiles.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/client/ClientFiles.vue ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true& */ "./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true&");
+/* harmony import */ var _ClientFiles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ClientFiles.vue?vue&type=script&lang=js& */ "./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ClientFiles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "6cfcd2da",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/client/ClientFiles.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/trial/AddTrial.vue":
 /*!****************************************************!*\
   !*** ./resources/js/components/trial/AddTrial.vue ***!
@@ -74742,6 +75434,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/Folders.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/admin/Folders.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Folders_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Folders.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Folders_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/Institutions.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************!*\
   !*** ./resources/js/components/admin/Institutions.vue?vue&type=script&lang=js& ***!
@@ -74870,6 +75578,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientFiles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ClientFiles.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientFiles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/trial/AddTrial.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************!*\
   !*** ./resources/js/components/trial/AddTrial.vue?vue&type=script&lang=js& ***!
@@ -74963,6 +75687,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true& ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Folders_vue_vue_type_template_id_2ac927ac_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Folders.vue?vue&type=template&id=2ac927ac&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/Folders.vue?vue&type=template&id=2ac927ac&scoped=true&");
 
 
 /***/ }),
@@ -75099,6 +75840,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowCase_vue_vue_type_template_id_67782c9e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowCase_vue_vue_type_template_id_67782c9e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShowCase.vue?vue&type=template&id=67782c9e&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/case/ShowCase.vue?vue&type=template&id=67782c9e&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true& ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientFiles_vue_vue_type_template_id_6cfcd2da_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/client/ClientFiles.vue?vue&type=template&id=6cfcd2da&scoped=true&");
 
 
 /***/ }),

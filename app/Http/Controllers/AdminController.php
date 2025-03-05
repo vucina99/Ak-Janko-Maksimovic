@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\InstitutionResource;
 use App\Http\Resources\InstitutionTypeResource;
 use App\Http\Resources\UserResource;
+use App\Models\Folder;
 use App\Models\Institution;
 use App\Models\InstitutionType;
 use App\Models\User;
@@ -105,4 +106,38 @@ class AdminController extends Controller
 
         return response("uspesno izmenjeno" , 200);
     }
+
+    public function folders()
+    {
+        return view('admin.folders');
+    }
+
+    public function getFolders()
+    {
+        $folders = Folder::select("id", "name")->where("name" , "!=" , "SVI FAJLOVI")->get();
+        return response($folders);
+    }
+
+    public function deleteFolder($id)
+    {
+        $folder = Folder::find($id);
+        if(!$folder){
+            abort(500);
+        }
+
+        $folder = Folder::where("id" , $id)->delete();
+
+        abort(200);
+    }
+
+    public function createFolder(Request $request)
+    {
+        $folder = Folder::create([
+            "name" => $request->folderName
+        ]);
+
+        abort(200);
+    }
+
+
 }

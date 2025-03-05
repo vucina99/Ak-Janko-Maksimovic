@@ -19,4 +19,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser']);
     Route::get('/change-role/{id}', [AdminController::class, 'changeRole']);
 
+
+
+
+//        Folders
+    Route::get('/folders', [AdminController::class, 'folders']);
+    Route::delete('/delete/folder/{id}', [AdminController::class, 'deleteFolder']);
+    Route::post('/create/folder', [AdminController::class, 'createFolder']);
+
+
 });
+Route::get('admin/get/folders', [AdminController::class, 'getFolders']);

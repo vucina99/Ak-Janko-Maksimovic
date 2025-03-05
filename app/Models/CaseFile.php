@@ -16,6 +16,7 @@ class CaseFile extends Model
         'name',
         'path',
         'upload_date',
+        'folder_id'
     ];
 
     public function removeFile($caseFileFromID)

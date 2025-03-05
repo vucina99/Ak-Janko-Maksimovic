@@ -27,6 +27,7 @@ class CaseResource extends JsonResource
             'failDay' => $this->fail_day,
             'caseType' => new CaseTypeResource($this->case_type),
             'archive' => $this->archive,
+            'createdAt' => $this->created_at,
         ];
     }
 }
